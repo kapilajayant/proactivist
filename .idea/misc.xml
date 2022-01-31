@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Jayant Kapila/.gradle/caches/transforms-3/6b537f1331884dd4ca1890c69d30243d/transformed/jetified-gappein-ui-1.0.0-beta3/res/drawable-anydpi-v24/ic_send_button.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/.gradle/caches/transforms-3/6b537f1331884dd4ca1890c69d30243d/transformed/jetified-gappein-ui-1.0.0-beta3/res/drawable/ic_no_chat.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/.gradle/caches/transforms-3/6b537f1331884dd4ca1890c69d30243d/transformed/jetified-gappein-ui-1.0.0-beta3/res/drawable/recieved_message_background.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/.gradle/caches/transforms-3/6b537f1331884dd4ca1890c69d30243d/transformed/jetified-gappein-ui-1.0.0-beta3/res/drawable/recieved_message_deleted_background.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/.gradle/caches/transforms-3/6b537f1331884dd4ca1890c69d30243d/transformed/jetified-gappein-ui-1.0.0-beta3/res/drawable/sent_message_background.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/.gradle/caches/transforms-3/942ca26fa1f268aba76266fccf0bb7c4/transformed/jetified-ui-2.0.3/res/drawable/gph_search_btn_bg.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable-v24/ic_linkedin.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/bg_chat_left.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/bg_chat_right.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/bg_edit.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/bg_rounded.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/bg_rounded_image.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/bg_selector.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/bg_summary.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/bottom_sheet_background.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/ic_accept.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/ic_ask.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/ic_back_black.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/ic_help.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/ic_next.xml" value="0.18125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/ic_next_black.xml" value="0.18125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/ic_pending.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/ic_reject.xml" value="0.1763888888888889" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/drawable/ripple_effect.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/activity_applications.xml" value="0.14791666666666667" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/activity_candidate_detail.xml" value="0.14444444444444443" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/activity_chat.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/activity_edit_profile.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/activity_job_details.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/activity_profile.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/activity_referrer_profile.xml" value="0.16111111111111112" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/activity_splash.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/activity_view_applicants.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/card_layout_job.xml" value="0.1701388888888889" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/card_layout_profile.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/card_layout_referrer.xml" value="0.1701388888888889" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/chat_item_left.xml" value="0.16271186440677965" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/chat_item_right.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/dialog_loading.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/fragment_edit_profile.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/fragment_learn.xml" value="0.1" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/fragment_refer.xml" value="0.1722007722007722" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/fragment_settings.xml" value="0.1722007722007722" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/layout_app_bar.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/layout_help.xml" value="0.141796875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/layout_main_app_bar.xml" value="0.16111111111111112" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/layout_new_job_posting.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/layout_new_topic_post.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/layout_profile.xml" value="0.1722007722007722" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/layout/layout_referrer_profile.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivist/Android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable-v24/bg_summary.xml" value="0.2484375" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable-v24/ic_back_black.xml" value="0.25104166666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable-v24/phone_outline.xml" value="0.25104166666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable-v24/tab_selector.xml" value="0.25104166666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/bg_edit.xml" value="0.2484375" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/bg_selector.xml" value="0.18416988416988417" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/bottom_sheet_background.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/dash_bg.xml" value="0.18416988416988417" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_back.xml" value="0.21583011583011583" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_back_black.xml" value="0.2484375" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_connect.xml" value="0.25104166666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_edit.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_explore_black_24dp.xml" value="0.24717948717948718" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_feed.xml" value="0.24717948717948718" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_home_illustration.xml" value="0.24717948717948718" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_link.xml" value="0.21583011583011583" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_next_black.xml" value="0.21583011583011583" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_proactivistslogo.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_profile.xml" value="0.21583011583011583" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_refer.xml" value="0.25104166666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_save.xml" value="0.25104166666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_saved.xml" value="0.2484375" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_search.xml" value="0.186328125" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_skip_black.xml" value="0.25104166666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ic_write.xml" value="0.21583011583011583" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/indicator_active.xml" value="0.25104166666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/indicator_inactive.xml" value="0.25104166666666666" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/phone_outline.xml" value="0.21583011583011583" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/ripple_effect.xml" value="0.18416988416988417" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/drawable/tab_selector.xml" value="0.24717948717948718" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_container.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_edit_profile.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_home.xml" value="0.2" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_job_details.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_main.xml" value="0.22083333333333333" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_profile.xml" value="0.16111111111111112" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_search.xml" value="0.163671875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_splash.xml" value="0.15486111111111112" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_topic.xml" value="0.20625" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_user_role.xml" value="0.163671875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_view_applicants.xml" value="0.1673611111111111" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/activity_welcome.xml" value="0.16875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/card_layout_job.xml" value="0.15138888888888888" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/card_layout_saved.xml" value="0.23489583333333333" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/fragment_edit_profile.xml" value="0.1722007722007722" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/fragment_home.xml" value="0.23489583333333333" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/fragment_learn.xml" value="0.1527777777777778" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/fragment_refer.xml" value="0.1725521669341894" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/fragment_settings.xml" value="0.1722007722007722" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/fragment_tutorial.xml" value="0.1625" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/fragment_user_role.xml" value="0.176" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/layout_app_bar.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/layout_main_app_bar.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/layout_new_job_posting.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/layout_new_topic_post.xml" value="0.1722007722007722" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/layout_referrer_profile.xml" value="0.17421875" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/layout/layout_skills.xml" value="0.1722007722007722" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/menu/action_bar_menu.xml" value="0.23489583333333333" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/menu/bottom_nav_menu.xml" value="0.18541666666666667" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.13072916666666667" />
+        <entry key="..\:/Users/Jayant Kapila/Documents/Work/Proactivists/app/src/main/res/xml/chip.xml" value="0.23229166666666667" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

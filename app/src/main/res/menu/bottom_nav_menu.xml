@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_feed"
+        android:icon="@drawable/ic_feed"
+        android:visible="false"
+        android:title="Feed" />
+
+    <item
+        android:id="@+id/menu_jobs"
+        android:icon="@drawable/ic_work"
+        android:title="Jobs" />
+
+    <item
+        android:id="@+id/menu_learn"
+        android:icon="@drawable/ic_explore_black_24dp"
+        android:title="Learn" />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_dashboard"
+        android:title="Dashboard"/>
+
+</menu>

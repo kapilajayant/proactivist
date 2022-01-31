@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Proactivist</string>
+    <!--Titles-->
+    <string name="first_slide_title">Connect</string>
+    <string name="second_slide_title">Refer</string>
+    <string name="third_slide_title">Learn</string>
+
+    <string name="first_slide_desc">Connect with the community and grow together.</string>
+    <string name="second_slide_desc">Perfect place for referrers and candidates.</string>
+    <string name="third_slide_desc">Learn from the industry leaders.</string>
+    <string name="string_desc">Life is like a piano; the white keys represent happiness and the black show sadness. But as you go through life’s journey, remember that the black keys also create music."</string>
+
+    <string name="share_this_app_with_your_friends_and_get_instant_cash_upto_5000">Share this app with your friends and get instant cash upto ₹5000</string>
+    <string name="_10_referrals_1500_cash">10 referrals = ₹1500 cash</string>
+    <string name="_20_referrals_5000_cash">20 referrals = ₹5000 cash</string>
+    <string name="each_referral_is_required_complete_an_order">Each referral is required complete an order</string>
+    <string name="_2_extra_cashback_on_the_total_order_amount">+2% extra cashback on the total order amount</string>
+    <string name="upload_string">Upload a photo confirming the successful submission of referral.</string>
+    <string name="upload_desc_string">We only ask this to inform candidate about their application.</string>
+    <string name="invite_string">Invite your friends and get 50 coins.</string>
+    <string name="invite_desc_string">Share the code below and ask them enter this after they sign up.</string>
+    <string name="enter_code_string">Have an invite code?\nEnter Here</string>
+    <string name="about_us">Our aim is to become a professional community where you can reach new heights by uplifting each other.</string>
+    <string name="link"><a href="https://proactivist.in/">Visit our website</a></string>
+    <string name="help_how_it_works">• create your account as candidate or a referrer.\n• request for referrals.\n• refer other candidates.\n• chat with each other after approval of the referrer\n
+    </string>
+    <string name="help_coins">• you get 500 coins by default.\n• as a candidate, for every successful referral you will spend 100 coins.\n• if your application gets rejected, you will get the 100 coins credited back.\n• as a referrer, for every successful referral you will get 100 coins.\n• for every invite you will get 300 coins.\n• we will add more ways to earn and spend coins (suggestions are welcomed).\n
+    </string>
+    <string name="help_my_account">• use your google account to login or sign up.\n• select your role after login.\n• create profile by adding basic details about you and your company.\n• you can create a profile of other role using same google account.
+    </string>
+
+    <string name="help_status">• after you request for a referral, the status is pending.\n• if the referrer likes the profile he/she will change the status to accepted.\n• referrer will upload a photo or a screenshot depicting the submission of the referral.\n• our team will confirm the same and transfer the coins.
+
+    </string>
+
+    <string-array name="status">
+        <item>Pending</item>
+        <item>Rejected</item>
+        <item>Accepted</item>
+        <item>Submitted</item>
+        <item>Completed</item>
+    </string-array>
+
+</resources>
