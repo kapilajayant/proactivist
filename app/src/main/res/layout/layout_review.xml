@@ -44,12 +44,6 @@
             <com.google.android.material.chip.Chip
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/chip_query"
-                android:text="Query"/>
-
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/chip_issue"
                 android:text="Issue"/>
 
@@ -75,36 +69,20 @@
             android:padding="10dp"
             android:hint=""/>
 
-        <androidx.cardview.widget.CardView
+        <Button
+            android:id="@+id/card_send"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginBottom="10dp"
-            android:id="@+id/card_send"
-            android:foreground="?attr/selectableItemBackground"
-            app:cardCornerRadius="10dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/nunito_regular"
-                    android:text="Send"
-                    android:textColor="@color/black"
-                    android:textSize="18dp" />
-
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/nunito_regular"
+            android:padding="20dp"
+            android:text="Done"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:cornerRadius="10dp" />
 
     </LinearLayout>
 

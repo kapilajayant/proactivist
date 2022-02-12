@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
@@ -28,10 +30,7 @@ import com.jayant.proactivist.models.Profile
 import com.jayant.proactivist.models.ResponseModel
 import com.jayant.proactivist.rest.APIService
 import com.jayant.proactivist.rest.ApiUtils
-import com.jayant.proactivist.utils.Constants
-import com.jayant.proactivist.utils.NetworkManager
-import com.jayant.proactivist.utils.PrefManager
-import com.jayant.proactivist.utils.ProfilePhotoLoader
+import com.jayant.proactivist.utils.*
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,9 +48,10 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var tv_company_name: TextView
     private var tvPosition: TextView? = null
     private var tv_position_static: TextView? = null
-    private lateinit var tv_summary: TextView
+    private lateinit var tv_summary: ScrollableTextView
     private lateinit var tv_summary_static: TextView
     private lateinit var tv_skills: TextView
+    private lateinit var iv_linkedin: ImageView
     private lateinit var iv_logo: ImageView
     private lateinit var iv_back: ImageView
     private lateinit var iv_edit: ImageView
@@ -99,10 +99,11 @@ class ProfileActivity : AppCompatActivity() {
         tvPosition = findViewById(R.id.tv_position)
         tv_position_static = findViewById(R.id.tv_position_static)
         iv_logo = findViewById<ImageView>(R.id.iv_logo)
+        iv_linkedin = findViewById(R.id.iv_linkedin)
         iv_back = findViewById<CircleImageView>(R.id.iv_back)
         iv_edit = findViewById(R.id.iv_edit)
         fl_skills = findViewById(R.id.fl_skills)
-        tv_summary = findViewById<TextView>(R.id.tv_summary)
+        tv_summary = findViewById<ScrollableTextView>(R.id.tv_summary)
         tv_summary_static = findViewById<TextView>(R.id.tv_summary_static)
         tv_skills = findViewById<TextView>(R.id.tv_skills)
         card_resume = findViewById(R.id.card_resume)
@@ -111,6 +112,8 @@ class ProfileActivity : AppCompatActivity() {
 
         if (intent.hasExtra("profile")){
             // loading received profile
+
+            DialogHelper.showLoadingDialog(this)
             setProfile(intent.getParcelableExtra("profile"))
         }
         else if(intent.hasExtra("load_profile_role")){
@@ -119,6 +122,7 @@ class ProfileActivity : AppCompatActivity() {
             val uid = intent.extras?.getString("load_profile_uid", "")
             if (uid != null && role != null) {
                 if(NetworkManager.getConnectivityStatusString(this@ProfileActivity) != Constants.NO_INTERNET) {
+                    DialogHelper.showLoadingDialog(this)
                     getProfile(uid, role)
                 }
                 else{
@@ -131,6 +135,7 @@ class ProfileActivity : AppCompatActivity() {
             // loading own profile
             FirebaseAuth.getInstance().currentUser?.uid?.let { PrefManager(this).profileRole?.let { it1 ->
                 if(NetworkManager.getConnectivityStatusString(this@ProfileActivity) != Constants.NO_INTERNET) {
+                    DialogHelper.showLoadingDialog(this)
                     getProfile(it, it1)
                 }
                 else{
@@ -232,7 +237,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setProfile(profile: Profile?) {
-
+        DialogHelper.hideLoadingDialog()
         iv_edit.setOnClickListener {
             val i = Intent(this, EditProfileActivity::class.java)
             i.putExtra("fromEdit", true)
@@ -272,6 +277,7 @@ class ProfileActivity : AppCompatActivity() {
             )
 
             Glide.with(this@ProfileActivity).load(profile?.company_logo)
+                .apply(RequestOptions.circleCropTransform())
                 .into(iv_logo)
         }
         catch (e: Exception) {
@@ -281,6 +287,15 @@ class ProfileActivity : AppCompatActivity() {
             val intent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(profile?.company_linkedin))
             startActivity(intent)
+        }
+        iv_linkedin.setOnClickListener {
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(profile?.personal_linkedin))
+                startActivity(intent)
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         if(profile?.role == Constants.REFERRER){
@@ -296,7 +311,9 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
         else{
-            tv_experience.text = profile?.experience
+            val years = profile?.experience?.substringBefore(":")
+            val months = profile?.experience?.substringAfter(":")
+            tv_experience.text = "$years years $months months"
             tv_summary.text = profile?.about
             val type = object : TypeToken<ArrayList<String>>() {}.type
             val skills = Gson().fromJson<ArrayList<String>>(profile?.skills, type)

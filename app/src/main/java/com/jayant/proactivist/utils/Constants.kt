@@ -31,9 +31,8 @@ object Constants {
     const val MOBILE_DATA = 2
     const val NO_INTERNET = 3
 
-    const val FEEDBACK = 0
-    const val QUERY = 1
-    const val ISSUE = -1
+    const val FEEDBACK = 1
+    const val ISSUE = 2
 
     const val GENERIC = 0
     const val CONFIRMATION_REJECTED = -2

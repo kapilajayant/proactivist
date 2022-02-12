@@ -29,10 +29,11 @@
             app:alignContent="space_around"
             app:showDivider="beginning|middle|end">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_skills"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:dropDownWidth="match_parent"
                 android:pointerIcon="none"
                 app:layout_flexGrow="1"
                 android:background="@android:color/transparent"

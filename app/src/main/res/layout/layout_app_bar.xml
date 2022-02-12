@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_app_bar"
@@ -16,7 +15,7 @@
         android:src="@drawable/ic_back_black" />
 
     <ImageView
-        android:id="@+id/iv_profile"
+        android:id="@+id/iv_profile_chat"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
@@ -31,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv_app_bar"
-        android:layout_toRightOf="@id/iv_profile"
+        android:layout_toRightOf="@id/iv_profile_chat"
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"

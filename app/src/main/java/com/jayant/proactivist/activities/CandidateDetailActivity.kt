@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -44,9 +45,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.widget.Toast
 import androidx.core.net.toFile
+import com.bumptech.glide.request.RequestOptions
 import com.jayant.proactivist.fragments.NoInternetFragment
 import com.jayant.proactivist.utils.Constants.NO_INTERNET
 import com.jayant.proactivist.utils.NetworkManager
+import com.jayant.proactivist.utils.ScrollableTextView
 import okhttp3.MultipartBody
 
 class CandidateDetailActivity : AppCompatActivity() {
@@ -57,6 +60,7 @@ class CandidateDetailActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private var referrerId: String? = null
     private lateinit var candidateId: String
+    private lateinit var iv_linkedin: ImageView
     private lateinit var iv_profile: CircleImageView
     private lateinit var tvProfile: TextView
     private lateinit var tv_profile_name: TextView
@@ -67,7 +71,7 @@ class CandidateDetailActivity : AppCompatActivity() {
     private lateinit var tv_company_name: TextView
     private var tvPosition: TextView? = null
     private var tv_position_static: TextView? = null
-    private lateinit var tv_summary: TextView
+    private lateinit var tv_summary: ScrollableTextView
     private lateinit var tv_summary_static: TextView
     private lateinit var tv_skills: TextView
     private lateinit var iv_logo: ImageView
@@ -88,6 +92,7 @@ class CandidateDetailActivity : AppCompatActivity() {
     private var candidatesItem: GetCandidatesItem? = null
     private var profileId = ""
     private var applicationId = ""
+    private var job_id = ""
     private var status = Constants.PENDING
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,6 +102,7 @@ class CandidateDetailActivity : AppCompatActivity() {
         apiService = ApiUtils.getAPIService()
         DialogHelper.showLoadingDialog(this)
 
+        iv_linkedin = findViewById(R.id.iv_linkedin)
         iv_profile = findViewById(R.id.iv_profile)
         tv_profile_name = findViewById(R.id.tv_profile_name)
         tvProfile = findViewById(R.id.tvProfile)
@@ -172,6 +178,7 @@ class CandidateDetailActivity : AppCompatActivity() {
                 candidatesItem?.status?.let {
                     status = it
                 }
+
             }
         }
 
@@ -184,6 +191,19 @@ class CandidateDetailActivity : AppCompatActivity() {
         if (intent.hasExtra("application_id")) {
             intent.extras?.let {
                 applicationId = it.getString("application_id", "")
+            }
+        }
+        if (intent.hasExtra("job_id")) {
+            intent.extras?.let {
+                job_id = it.getString("job_id", "")
+            }
+            tv_profile_mobile.setOnClickListener {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(job_id))
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
 
@@ -471,7 +491,9 @@ class CandidateDetailActivity : AppCompatActivity() {
         val currentUser = FirebaseAuth.getInstance().currentUser
 
         tv_profile_name.text = profile.name
-        tv_profile_mobile.text = profile.phone
+        tv_profile_mobile.text = "Job Link"
+        tv_profile_mobile.compoundDrawablePadding = 10
+        tv_profile_mobile.setCompoundDrawablesWithIntrinsicBounds( null, null, ContextCompat.getDrawable(this, R.drawable.ic_link), null)
         tv_profile_email.text = profile.email
         tv_company_name.text = profile.company_name
 
@@ -481,15 +503,28 @@ class CandidateDetailActivity : AppCompatActivity() {
                 .into(iv_profile)
 
             Glide.with(this@CandidateDetailActivity).load(profile.company_logo)
+                .apply(RequestOptions.circleCropTransform())
                 .into(iv_logo)
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+
+        iv_linkedin.setOnClickListener {
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(profile.personal_linkedin))
+                startActivity(intent)
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
         iv_logo.setOnClickListener {
             val intent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(profile.company_linkedin))
             startActivity(intent)
         }
+
+        tv_summary.movementMethod = ScrollingMovementMethod()
 
         if (profile.role == Constants.REFERRER) {
             fl_skills.visibility = View.GONE
@@ -498,7 +533,9 @@ class CandidateDetailActivity : AppCompatActivity() {
             tv_skills.visibility = View.GONE
             tv_summary_static.visibility = View.GONE
         } else {
-            tv_experience.text = profile.experience
+            val years = profile.experience?.substringBefore(":")
+            val months = profile.experience?.substringAfter(":")
+            tv_experience.text = "$years years $months months"
             tv_summary.text = profile.about
             val type = object : TypeToken<ArrayList<String>>() {}.type
             val skills = Gson().fromJson<ArrayList<String>>(profile.skills, type)
@@ -522,9 +559,9 @@ class CandidateDetailActivity : AppCompatActivity() {
     private fun showAcceptedUi(){
         val window = this.window
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = resources.getColor(R.color.green)
+            window.statusBarColor = resources.getColor(R.color.green_tint)
         }
-        relative_bg.background = ColorDrawable(ContextCompat.getColor(this, R.color.green))
+        relative_bg.background = ColorDrawable(ContextCompat.getColor(this, R.color.green_tint))
         btn_action.text = "Upload Photo"
         btn_action.backgroundTintList = ContextCompat.getColorStateList(this, R.color.black)
         btn_accept.visibility = View.GONE
@@ -543,20 +580,20 @@ class CandidateDetailActivity : AppCompatActivity() {
         btn_accept.visibility = View.VISIBLE
         btn_reject.visibility = View.VISIBLE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = resources.getColor(R.color.yellow)
+            window.statusBarColor = resources.getColor(R.color.yellow_tint)
         }
-        relative_bg.background = ColorDrawable(ContextCompat.getColor(this, R.color.yellow))
+        relative_bg.background = ColorDrawable(ContextCompat.getColor(this, R.color.yellow_tint))
     }
 
     private fun showRejectedUi() {
 
         val window = this.window
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = resources.getColor(R.color.red)
+            window.statusBarColor = resources.getColor(R.color.red_tint)
         }
-        btn_accept.visibility = View.GONE
+        btn_accept.visibility = View.VISIBLE
         btn_reject.visibility = View.GONE
-        relative_bg.background = ColorDrawable(ContextCompat.getColor(this, R.color.red))
+        relative_bg.background = ColorDrawable(ContextCompat.getColor(this, R.color.red_tint))
     }
 
     private fun showSubmittedUi(){

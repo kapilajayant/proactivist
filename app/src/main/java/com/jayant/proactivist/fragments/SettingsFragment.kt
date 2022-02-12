@@ -25,9 +25,13 @@ import com.jayant.proactivist.rest.ApiUtils
 import com.jayant.proactivist.utils.Constants
 import com.jayant.proactivist.utils.NetworkManager
 import com.jayant.proactivist.utils.PrefManager
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class SettingsFragment : Fragment() {
     // TODO: Rename and change types of parameters
@@ -72,6 +76,7 @@ class SettingsFragment : Fragment() {
         tv_review = view.findViewById(R.id.tv_review)
         tv_about_us = view.findViewById(R.id.tv_about_us)
 
+        getCoins()
         setupProfile()
 
         val btn_sign_out: TextView = view.findViewById(R.id.btn_sign_out)
@@ -124,7 +129,7 @@ class SettingsFragment : Fragment() {
             startActivity(intent)
         }
         card_invite.setOnClickListener {
-            var message = "I'm inviting you to join Proactivist. Get 50 coins by using my invite code: $inviteCode https://play.google.com/store/apps/details?id=com.jayant.proactivist"
+            var message = "I'm inviting you to join Proactivist. \nGet 50 coins by using my invite code: \n\n\nhttps://proactivist.in?inviteCode=$inviteCode \n\n\n Download the app now https://play.google.com/store/apps/details?id=com.jayant.proactivist"
             shareOthers(message)
         }
         card_chat.setOnClickListener {
@@ -148,7 +153,7 @@ class SettingsFragment : Fragment() {
         }
 
         val prefManager = PrefManager(requireContext())
-        inviteCode = prefManager.profileRole?.substring(0, 3) + "_" + FirebaseAuth.getInstance().currentUser?.uid
+        inviteCode = ""
 
         val role = prefManager.profileRole
         if(role == Constants.CANDIDATE){
@@ -157,7 +162,6 @@ class SettingsFragment : Fragment() {
         else{
             tv_role.text = "Referrer"
         }
-
     }
 
     companion object {
@@ -186,4 +190,39 @@ class SettingsFragment : Fragment() {
         startActivity(Intent.createChooser(sendIntent, "choose one"))
     }
 
+    private fun getCoins() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (uid != null) {
+            apiService.getCoins(uid).enqueue(object : Callback<ResponseModel> {
+                override fun onResponse(
+                    call: Call<ResponseModel>,
+                    response: Response<ResponseModel>
+                ) {
+                    if (response.isSuccessful) {
+                        try {
+                            if(response.code() == 200){
+                                response.body()?.getCoinsResponse()?.invite_code.let {
+                                    inviteCode = it.toString()
+                                }
+                            }
+                            else {
+                                Toast.makeText(requireContext(), response.body()?.message, Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(requireContext(), "Something went wrong!", Toast.LENGTH_SHORT).show()
+                            e.printStackTrace()
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Something went wrong!", Toast.LENGTH_SHORT).show()
+                    Log.d("profile_backend", "onFailure: ${call.request().url()}")
+                    t.printStackTrace()
+                }
+
+            })
+        }
+    }
 }

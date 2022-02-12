@@ -39,10 +39,7 @@ import com.jayant.proactivist.models.Profile
 import com.jayant.proactivist.rest.APIService
 import com.jayant.proactivist.rest.ApiUtils
 import com.jayant.proactivist.rest.CompanySearchAPIService
-import com.jayant.proactivist.utils.Constants
-import com.jayant.proactivist.utils.NetworkManager
-import com.jayant.proactivist.utils.PrefManager
-import com.jayant.proactivist.utils.ProfilePhotoLoader
+import com.jayant.proactivist.utils.*
 import de.hdodenhof.circleimageview.CircleImageView
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -50,9 +47,13 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.widget.ArrayAdapter
 
 class EditProfileActivity : AppCompatActivity(), CompanySelected {
 
+    private lateinit var companySearchAdapter: CompanySearchAdapter
+    private var years = 0
+    private var months = 0
     private lateinit var flSkills: FlexboxLayout
     private lateinit var profile: Profile
     private var fromEdit = false
@@ -69,10 +70,15 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
     lateinit var companySearchApiService: CompanySearchAPIService
     lateinit var apiService: APIService
     private var suggestions = ArrayList<CompanySuggestion>()
+    private var skillsSuggestions = ArrayList<String>()
 
     private var skillsList = arrayListOf<String>()
 
-    private lateinit var cardSave: CardView
+    private lateinit var numberPickerYears: NumberPicker
+    private lateinit var numberPickerMonths: NumberPicker
+    private lateinit var tv_app_bar: TextView
+    private lateinit var iv_back: ImageView
+    private lateinit var cardSave: Button
     private var etName: EditText? = null
     private var etExperience: EditText? = null
     private var tvExperience: TextView? = null
@@ -84,7 +90,7 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
     private var tvPosition: TextView? = null
     private var etPosition: EditText? = null
     private var etSummary: EditText? = null
-    private var etSkills: EditText? = null
+    private var etSkills: AutoCompleteTextView? = null
     private var etPersonalLinkedin: EditText? = null
     private var etCompanyLinkedin: EditText? = null
     private var etResume: EditText? = null
@@ -92,6 +98,7 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
     private lateinit var tvProfile: TextView
     private lateinit var progress: LinearProgressIndicator
     private lateinit var ivProfile: CircleImageView
+    private lateinit var iv_search: ImageView
     private lateinit var backPressListener: BackPressListener
     private var runnable: Runnable? = null
     private var handler: Handler? = null
@@ -100,6 +107,42 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+
+        skillsSuggestions.add("React")
+        skillsSuggestions.add("Java")
+        skillsSuggestions.add("Android")
+        skillsSuggestions.add("Kotlin")
+        skillsSuggestions.add("php")
+        skillsSuggestions.add("ios")
+        skillsSuggestions.add("Python")
+        skillsSuggestions.add("Django")
+        skillsSuggestions.add("Vue")
+        skillsSuggestions.add("Html")
+        skillsSuggestions.add("Javascript")
+        skillsSuggestions.add("Flutter")
+        skillsSuggestions.add("React Native")
+        skillsSuggestions.add("Angular")
+        skillsSuggestions.add("C")
+        skillsSuggestions.add("C++")
+        skillsSuggestions.add("C#")
+        skillsSuggestions.add("Go")
+        skillsSuggestions.add("CSS")
+        skillsSuggestions.add("Figma")
+        skillsSuggestions.add("UI UX")
+        skillsSuggestions.add("Adobe XD")
+        skillsSuggestions.add("Graphic Design")
+        skillsSuggestions.add("kafka")
+        skillsSuggestions.add("Kubernetes")
+        skillsSuggestions.add("Docker")
+        skillsSuggestions.add("Devops")
+        skillsSuggestions.add("AWS")
+        skillsSuggestions.add("GCP")
+        skillsSuggestions.add("Swift")
+        skillsSuggestions.add("Node JS")
+        skillsSuggestions.add("Mongo")
+        skillsSuggestions.add("Firebase")
+        skillsSuggestions.add("Socket")
+        skillsSuggestions.add("Dot Net")
 
         handler = Handler()
 
@@ -121,7 +164,10 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
                 profile = it
             }
         }
-
+        numberPickerYears = findViewById(R.id.numberPickerYears)
+        numberPickerMonths = findViewById(R.id.numberPickerMonths)
+        tv_app_bar = findViewById(R.id.tv_app_bar)
+        iv_back = findViewById(R.id.iv_back)
         progress = findViewById(R.id.progress)
         cardSave = findViewById(R.id.card_save)
         etName = findViewById(R.id.et_name)
@@ -142,9 +188,8 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
         tvSkills = findViewById(R.id.tv_skills)
         tvSummary = findViewById(R.id.tv_summary)
         ivProfile = findViewById(R.id.iv_profile)
+        iv_search = findViewById(R.id.iv_search)
         flSkills = findViewById<FlexboxLayout>(R.id.fl_skills)
-
-        progress.visibility = View.GONE
 
         if (role == Constants.REFERRER) {
             flSkills.visibility = View.GONE
@@ -161,6 +206,32 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
     }
 
     private fun setUpWidgets() {
+
+        numberPickerMonths.maxValue = 12
+        numberPickerMonths.minValue = 0
+        numberPickerMonths.value = 0
+        numberPickerYears.maxValue = 50
+        numberPickerYears.minValue = 0
+        numberPickerYears.value = 0
+
+        numberPickerYears.setOnValueChangedListener { numberPicker, old, new ->
+            years = new
+        }
+
+        numberPickerMonths.setOnValueChangedListener { numberPicker, old, new ->
+            months = new
+        }
+
+        if(fromEdit){
+            tv_app_bar.text = "Edit Profile"
+        }
+        else{
+            tv_app_bar.text = "Create Profile"
+        }
+
+        iv_back.setOnClickListener {
+            finish()
+        }
 
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if (account != null) {
@@ -184,6 +255,18 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
 
         if (fromEdit) {
             profile.let {
+
+                val years = it.experience?.substringBefore(":")
+                val months = it.experience?.substringAfter(":")
+                if (years != null) {
+                    this.years = years.toInt()
+                    numberPickerYears.value = years.toInt()
+                }
+                if (months != null) {
+                    this.months = months.toInt()
+                    numberPickerMonths.value = months.toInt()
+                }
+
                 etName?.setText(it.name)
                 etPersonalLinkedin?.setText(it.personal_linkedin)
                 etEmail?.setText(it.email)
@@ -245,6 +328,14 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
         Log.d(TAG, "onCreateView etPhone: ${etPhone?.isInEditMode}")
         Log.d(TAG, "onCreateView etPhone: ${etPhone?.editableText}")
 
+        companySearchAdapter = CompanySearchAdapter(
+            this@EditProfileActivity,
+            R.layout.card_layout_job,
+            suggestions,
+            this@EditProfileActivity
+        )
+        etCompany?.setAdapter(companySearchAdapter)
+
         etCompany?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -259,8 +350,16 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
                 runnable = Runnable {
                     //check if it is not empty then search
                     if (etCompany?.text.toString().isEmpty().not()) {
-                        progress.show()
-                        searchForCompany(etCompany?.text.toString())
+                        if(etCompany?.text.toString().length >= 3) {
+                            progress.show()
+                            searchForCompany(etCompany?.text.toString())
+                        }
+                        else{
+                            if(!suggestions.isNullOrEmpty()){
+                                suggestions.clear()
+                                companySearchAdapter.notifyDataSetChanged()
+                            }
+                        }
                     }
                 }
                 handler?.postDelayed(runnable!!, timeToWait)
@@ -269,6 +368,22 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
         }
         )
 
+        iv_search.setOnClickListener {
+            if(etCompany?.text.toString().isNullOrEmpty().not()) {
+                progress.show()
+                searchForCompany(etCompany?.text.toString())
+            }
+        }
+
+
+        val adapter = ArrayAdapter<String>(this, android.R.layout.select_dialog_item, skillsSuggestions)
+        etSkills?.setOnItemClickListener { adapterView, view, i, l ->
+            val skill = adapterView.adapter.getItem(i) as String
+            addNewChip(skill, flSkills)
+            etSkills?.setText("")
+        }
+        etSkills?.threshold = 3 //will start working from first character
+        etSkills?.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
         etSkills?.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 val txtVal = v.text
@@ -303,102 +418,148 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
                 if (currentUser != null) {
                     if (role == Constants.REFERRER)
                     {
-
-                        if (etName?.text.toString().isNotEmpty()
-                            and etPhone?.text.toString().isNotEmpty()
-                            and etEmail?.text.toString().isNotEmpty()
-                            and etPosition?.text.toString().isNotEmpty()
-                            and etPersonalLinkedin?.text.toString().isNotEmpty()
-                            and (etPersonalLinkedin?.text?.length != 28)
-                            and etCompany?.text.toString().isNotEmpty()
-                            and etCompanyLinkedin?.text.toString().isNotEmpty()
-                            and (etCompanyLinkedin?.text?.length != 33)
-                        ) {
-                            val profile = Profile()
-                            val company = CompanyItem(
-                                etCompany?.text.toString(),
-                                companyLogo,
-                                etCompanyLinkedin?.text.toString()
-                            )
-                            profile.uid = currentUser.uid
-                            profile.name = etName?.text.toString()
-                            profile.phone = etPhone?.text.toString()
-                            profile.email = etEmail?.text.toString()
-                            profile.position = etPosition?.text.toString()
-                            profile.experience = etExperience?.text.toString()
-                            profile.personal_linkedin = etPersonalLinkedin?.text.toString()
-                            profile.company_name = etCompany?.text.toString()
-                            profile.company_linkedin = etCompanyLinkedin?.text.toString()
-                            profile.skills = skills
-                            profile.about = about
-                            profile.role = role
-                            profile.resume = etResume?.text.toString()
-                            if (currentUser.photoUrl != null) {
-                                profile.photo = currentUser.photoUrl.toString()
+                        if (etName?.text.toString().isNotEmpty()) {
+                            if (etPhone?.text.toString().isNotEmpty()) {
+                                if(etEmail?.text.toString().isNotEmpty()){
+                                    if(etPosition?.text.toString().isNotEmpty()){
+                                        if(etPersonalLinkedin?.text.toString().isNotEmpty()){
+                                            if((etPersonalLinkedin?.text?.length != 28)){
+                                                if(etCompany?.text.toString().isNotEmpty()){
+                                                    if(etCompanyLinkedin?.text.toString().isNotEmpty()){
+                                                        if((etCompanyLinkedin?.text?.length != 33)){
+                                                            val profile = Profile()
+                                                            val company = CompanyItem(
+                                                                etCompany?.text.toString(),
+                                                                companyLogo,
+                                                                etCompanyLinkedin?.text.toString()
+                                                            )
+                                                            profile.uid = currentUser.uid
+                                                            profile.name = etName?.text.toString()
+                                                            profile.phone = etPhone?.text.toString()
+                                                            profile.email = etEmail?.text.toString()
+                                                            profile.position = etPosition?.text.toString()
+                                                            profile.experience = "$years:$months"
+                                                            profile.personal_linkedin = etPersonalLinkedin?.text.toString()
+                                                            profile.company_name = etCompany?.text.toString()
+                                                            profile.company_linkedin = etCompanyLinkedin?.text.toString()
+                                                            profile.skills = skills
+                                                            profile.about = about
+                                                            profile.role = role
+                                                            profile.resume = etResume?.text.toString()
+                                                            if (currentUser.photoUrl != null) {
+                                                                profile.photo = currentUser.photoUrl.toString()
+                                                            }
+                                                            profile.company_logo = companyLogo
+                                                            val prefManager = PrefManager(this)
+                                                            prefManager.compId?.let {
+                                                                comp_id = it
+                                                            }
+                                                            profile.comp_id = comp_id
+                                                            prefManager.setProfile(profile)
+                                                            createProfile(profile, company)
+                                                        }
+                                                        else{
+                                                            Snackbar.make(cardSave, "Add complete complete linkedin id!", Snackbar.LENGTH_SHORT).show()
+                                                        }
+                                                    }
+                                                    else{
+                                                        Snackbar.make(cardSave, "Enter company linkedin!", Snackbar.LENGTH_SHORT).show()
+                                                    }
+                                                }
+                                                else{
+                                                    Snackbar.make(cardSave, "Enter company!", Snackbar.LENGTH_SHORT).show()
+                                                }
+                                            }
+                                            else{
+                                                Snackbar.make(cardSave, "Add complete personal linkedin id!", Snackbar.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        else{
+                                            Snackbar.make(cardSave, "Enter personal linkedin id!", Snackbar.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    else{
+                                        Snackbar.make(cardSave, "Enter position!", Snackbar.LENGTH_SHORT).show()
+                                    }
+                                }
+                                else{
+                                    Snackbar.make(cardSave, "Enter email!", Snackbar.LENGTH_SHORT).show()
+                                }
                             }
-                            profile.company_logo = companyLogo
-                            val prefManager = PrefManager(this)
-                            prefManager.compId?.let {
-                                comp_id = it
+                            else {
+                                Snackbar.make(cardSave, "Enter phone!", Snackbar.LENGTH_SHORT).show()
                             }
-                            profile.comp_id = comp_id
-                            prefManager.setProfile(profile)
-                            createProfile(profile, company)
-                        } else {
-                            Snackbar.make(cardSave, "Incomplete details!", Snackbar.LENGTH_SHORT)
-                                .show()
+                        }
+                        else{
+                            Snackbar.make(cardSave, "Enter name!", Snackbar.LENGTH_SHORT).show()
                         }
                     }
                     else
                     {
-                        if (etName?.text.toString().isNotEmpty()
-                            and etPhone?.text.toString().isNotEmpty()
-                            and etEmail?.text.toString().isNotEmpty()
-//                            and etPosition?.text.toString().isNotEmpty()
-//                            and etExperience?.text.toString().isNotEmpty()
-                            and etPersonalLinkedin?.text.toString().isNotEmpty()
-                            and (etPersonalLinkedin?.text?.length != 28)
-//                            and etCompany?.text.toString().isNotEmpty()
-//                            and etCompanyLinkedin?.text.toString().isNotEmpty()
-//                            and (etCompanyLinkedin?.text?.length != 33)
-                            and etResume?.text.toString().isNotEmpty()
-                            and etResume?.text.toString().contains("drive.google.com")
-                        ) {
-                            val profile = Profile()
-                            val company = CompanyItem(
-                                etCompany?.text.toString(),
-                                companyLogo,
-                                etCompanyLinkedin?.text.toString()
-                            )
-                            profile.uid = currentUser.uid
-                            profile.name = etName?.text.toString()
-                            profile.phone = etPhone?.text.toString()
-                            profile.email = etEmail?.text.toString()
-                            profile.position = etPosition?.text.toString()
-                            profile.experience = etExperience?.text.toString()
-                            profile.personal_linkedin = etPersonalLinkedin?.text.toString()
-                            profile.company_name = etCompany?.text.toString()
-                            profile.company_linkedin = etCompanyLinkedin?.text.toString()
-                            profile.skills = skills
-                            profile.about = about
-                            profile.role = role
-                            profile.resume = etResume?.text.toString()
-                            if (currentUser.photoUrl != null) {
-                                profile.photo = currentUser.photoUrl.toString()
+                        if (etName?.text.toString().isNotEmpty()) {
+                            if(etPhone?.text.toString().isNotEmpty()){
+                                if(etEmail?.text.toString().isNotEmpty()){
+                                    if(etPersonalLinkedin?.text.toString().isNotEmpty()){
+                                       if((etPersonalLinkedin?.text?.length != 28)){
+                                          if(etResume?.text.toString().isNotEmpty()){
+                                             if(etResume?.text.toString().contains("drive.google.com")){
+                                                 val profile = Profile()
+                                                 val company = CompanyItem(
+                                                     etCompany?.text.toString(),
+                                                     companyLogo,
+                                                     etCompanyLinkedin?.text.toString()
+                                                 )
+                                                 profile.uid = currentUser.uid
+                                                 profile.name = etName?.text.toString()
+                                                 profile.phone = etPhone?.text.toString()
+                                                 profile.email = etEmail?.text.toString()
+                                                 profile.position = etPosition?.text.toString()
+                                                 profile.experience = "$years:$months"
+                                                 profile.personal_linkedin = etPersonalLinkedin?.text.toString()
+                                                 profile.company_name = etCompany?.text.toString()
+                                                 profile.company_linkedin = etCompanyLinkedin?.text.toString()
+                                                 profile.skills = skills
+                                                 profile.about = about
+                                                 profile.role = role
+                                                 profile.resume = etResume?.text.toString()
+                                                 if (currentUser.photoUrl != null) {
+                                                     profile.photo = currentUser.photoUrl.toString()
+                                                 }
+                                                 profile.company_logo = companyLogo
+                                                 val prefManager = PrefManager(this)
+                                                 prefManager.compId?.let {
+                                                     comp_id = it
+                                                 }
+                                                 profile.comp_id = comp_id
+                                                 prefManager.setProfile(profile)
+                                                 createProfile(profile, company)
+                                             }
+                                             else{
+                                                 Snackbar.make(cardSave, "Add a valid google drive resume!", Snackbar.LENGTH_SHORT).show()
+                                             }
+                                          }
+                                           else{
+                                              Snackbar.make(cardSave, "Add resume!", Snackbar.LENGTH_SHORT).show()
+                                          }
+                                       }
+                                        else{
+                                           Snackbar.make(cardSave, "Add complete personal linkedin id!", Snackbar.LENGTH_SHORT).show()
+                                       }
+                                    }
+                                    else{
+                                        Snackbar.make(cardSave, "Enter personal linkedin id!", Snackbar.LENGTH_SHORT).show()
+                                    }
+                                }
+                                else{
+                                    Snackbar.make(cardSave, "Enter email!", Snackbar.LENGTH_SHORT).show()
+                                }
                             }
-                            profile.company_logo = companyLogo
-                            val prefManager = PrefManager(this)
-                            prefManager.compId?.let {
-                                comp_id = it
+                        else{
+                                Snackbar.make(cardSave, "Enter phone!", Snackbar.LENGTH_SHORT).show()
                             }
-                            profile.comp_id = comp_id
-                            prefManager.setProfile(profile)
-                            createProfile(profile, company)
-
                         }
                         else {
-                            Snackbar.make(cardSave, "Incomplete details!", Snackbar.LENGTH_SHORT)
-                                .show()
+                            Snackbar.make(cardSave, "Enter name!", Snackbar.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -450,21 +611,14 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
                     response: Response<ArrayList<CompanySuggestion>>
                 ) {
                     try {
+                        progress.visibility = View.GONE
                         Log.d(TAG, "onResponse: " + response.body())
                         response.body()?.forEach {
                             suggestions.add(it)
                         }
-                        val companySearchAdapter = CompanySearchAdapter(
-                            this@EditProfileActivity,
-                            R.layout.card_layout_job,
-                            suggestions,
-                            this@EditProfileActivity
-                        )
-                        etCompany?.setAdapter(companySearchAdapter)
 
                         companySearchAdapter.notifyDataSetChanged()
 
-                        progress.visibility = View.GONE
                     } catch (e: Exception) {
                         e.printStackTrace()
                         progress.visibility = View.GONE
@@ -485,6 +639,8 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
         profile.role?.let {
             role = it
         }
+
+        DialogHelper.showLoadingDialog(this)
 
         val jsonObject = JSONObject()
         val jsonObjectProfile = JSONObject()
@@ -525,7 +681,6 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
                                 if(response.code() == 200) {
                                     finish()
                                 }
-
                                 else {
                                     Toast.makeText(
                                         this@EditProfileActivity,
@@ -533,6 +688,7 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
+                                DialogHelper.hideLoadingDialog()
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
@@ -542,12 +698,12 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
                     override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
                         Log.d("profile_backend", "onFailure: ${call.request().url()}")
                         t.printStackTrace()
+                        DialogHelper.hideLoadingDialog()
                     }
-
                 })
             }
-
-        } else {
+        }
+        else {
             val body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
                 jsonObject.toString()
@@ -573,7 +729,7 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-
+                            DialogHelper.hideLoadingDialog()
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
@@ -583,8 +739,8 @@ class EditProfileActivity : AppCompatActivity(), CompanySelected {
                 override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
                     Log.d("profile_backend", "onFailure: ${call.request().url()}")
                     t.printStackTrace()
+                    DialogHelper.hideLoadingDialog()
                 }
-
             })
         }
     }

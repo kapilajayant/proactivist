@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -14,8 +15,10 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
 import com.jayant.proactivist.R
 import com.jayant.proactivist.fragments.NoInternetFragment
+import com.jayant.proactivist.fragments.ReferCallback
 import com.jayant.proactivist.fragments.ReferralProfileFragment
 import com.jayant.proactivist.models.Profile
 import com.jayant.proactivist.models.ResponseModel
@@ -24,24 +27,26 @@ import com.jayant.proactivist.rest.APIService
 import com.jayant.proactivist.rest.ApiUtils
 import com.jayant.proactivist.utils.Constants
 import com.jayant.proactivist.utils.NetworkManager
+import com.jayant.proactivist.utils.ScrollableTextView
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class ReferrerProfileActivity : AppCompatActivity() {
+class ReferrerProfileActivity : AppCompatActivity(), ReferCallback {
 
     lateinit var apiService: APIService
 
     private lateinit var iv_profile: CircleImageView
     private lateinit var iv_linkedin: ImageView
+//    private lateinit var iv_logo: ImageView
     private lateinit var tv_profile_name: TextView
     private lateinit var tv_profile: TextView
-    private lateinit var tv_about: TextView
-    private lateinit var iv_back: CircleImageView
+    private lateinit var tv_about: ScrollableTextView
+    private lateinit var iv_back: ImageView
     private lateinit var tv_position: TextView
-    private lateinit var card_ask: CardView
+    private lateinit var card_ask: MaterialButton
     private lateinit var swipe: SwipeRefreshLayout
     private var referrer: GetReferrersItem? = null
 
@@ -59,6 +64,7 @@ class ReferrerProfileActivity : AppCompatActivity() {
 
         iv_profile = findViewById(R.id.iv_profile)
         iv_linkedin = findViewById(R.id.iv_linkedin)
+//        iv_logo = findViewById(R.id.iv_logo)
         tv_profile_name = findViewById(R.id.tv_profile_name)
         tv_profile = findViewById(R.id.tv_profile)
         tv_position = findViewById(R.id.tv_position)
@@ -110,6 +116,9 @@ class ReferrerProfileActivity : AppCompatActivity() {
         tv_position.text = "${profile?.position} at ${profile?.company_name}"
 
         Glide.with(this).load(profile.photo).placeholder(ContextCompat.getDrawable(this, R.drawable.ic_profile)).into(iv_profile)
+//        Glide.with(this).load(profile.company_logo).placeholder(ContextCompat.getDrawable(this, R.drawable.ic_business)).into(iv_logo)
+
+        tv_about.movementMethod = ScrollingMovementMethod()
 
         if(profile.about.isNullOrEmpty()){
             tv_about.text = "${profile?.name} is ${profile?.position} at ${profile?.company_name}"
@@ -133,7 +142,7 @@ class ReferrerProfileActivity : AppCompatActivity() {
         card_ask.setOnClickListener {
             val fragment = profile.let { it1 -> profile.photo?.let { it2 ->
                 ReferralProfileFragment(
-                    it2, referrer)
+                    referrer, this)
             }
             }
             fragment?.show(supportFragmentManager, "")
@@ -178,5 +187,9 @@ class ReferrerProfileActivity : AppCompatActivity() {
 
                 })
         }
+    }
+
+    override fun closeReferrer() {
+        finish()
     }
 }

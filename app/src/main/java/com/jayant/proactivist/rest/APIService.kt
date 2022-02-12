@@ -41,4 +41,13 @@ interface APIService {
     @GET("/rest/application/get")
     fun getApplicationById(@Query("uid") uid: String, @Query("application_id") application_id: String): Call<ResponseModel>
 
+    @PUT("/rest/invite/add/")
+    fun addInviteCode(@Query("invite_code") invite_code: String, @Query("uid") uid: String): Call<ResponseModel>
+
+    @GET("/rest/search")
+    fun search(@Query("search_term") invite_code: String): Call<ListResponseModel>
+
+    @GET("/rest/feedback/post")
+    fun feedback(@Body body: RequestBody): Call<ResponseModel>
+
 }

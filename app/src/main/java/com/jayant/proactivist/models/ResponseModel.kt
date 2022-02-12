@@ -67,5 +67,7 @@ data class ApplicationStatus(
     var status: String
 )
 data class Coins(
-    var coins: Int
+    var coins: Int,
+    var invite_code: String,
+    var already_invited: Boolean
 )

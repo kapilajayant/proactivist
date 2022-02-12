@@ -17,6 +17,8 @@ import com.jayant.proactivist.R
 import com.jayant.proactivist.activities.CandidateDetailActivity
 import com.jayant.proactivist.activities.ReferrerProfileActivity
 import com.jayant.proactivist.fragments.NoInternetFragment
+import com.jayant.proactivist.fragments.ReferCallback
+import com.jayant.proactivist.fragments.ReferralProfileFragment
 import com.jayant.proactivist.models.Profile
 import com.jayant.proactivist.models.get_candidates.GetCandidatesItem
 import com.jayant.proactivist.models.get_referrers.GetReferrersItem
@@ -31,6 +33,12 @@ class ProfileAdapter(var context: Context, var uiType: Int, var fragmentManager:
 
     private var candidatesList: ArrayList<GetCandidatesItem> = ArrayList()
     private var referrersList: ArrayList<GetReferrersItem> = ArrayList()
+
+    private lateinit var referCallback: ReferCallback
+
+    fun setReferrerCallback(referCallback: ReferCallback){
+        this.referCallback = referCallback
+    }
 
     fun setCandidatesList(candidatesList: ArrayList<GetCandidatesItem>){
         this.candidatesList = candidatesList
@@ -60,9 +68,14 @@ class ProfileAdapter(var context: Context, var uiType: Int, var fragmentManager:
                     Glide.with(context).load(referrersList[position].company_logo).placeholder(ContextCompat.getDrawable(context, R.drawable.ic_business)).into(holder.ivLogo)
 
                     holder.cardProfile.setOnClickListener {
-                        val intent = Intent(context, ReferrerProfileActivity::class.java)
-                        intent.putExtra("referrer", referrersList[position])
-                        context.startActivity(intent)
+
+
+                        val fragment = ReferralProfileFragment(referrersList[position], referCallback)
+                        fragment.show(fragmentManager, "")
+
+//                        val intent = Intent(context, ReferrerProfileActivity::class.java)
+//                        intent.putExtra("referrer", referrersList[position])
+//                        context.startActivity(intent)
                     }
                 }
                 SHOW_CANDIDATES_LIST ->{

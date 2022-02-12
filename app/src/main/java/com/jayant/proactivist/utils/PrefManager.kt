@@ -14,6 +14,7 @@ class PrefManager(var _context: Context) {
 
     companion object {
         private const val PREF_PROFILE = "pref_profile"
+        private const val UID = "uid"
         private const val PROFILE_NAME = "profile_name"
         private const val PROFILE_PHONE = "profile_phone"
         private const val PROFILE_EMAIL = "profile_email"
@@ -29,6 +30,7 @@ class PrefManager(var _context: Context) {
         private const val PROFILE_RESUME = "profile_resume"
         private const val COMP_ID = "comp_id"
         private const val TOKEN = "token"
+        private const val INVITE_CODE = "invite_code"
         private const val LATEST_VERSION_CODE = "latest_version_code"
     }
 
@@ -41,6 +43,13 @@ class PrefManager(var _context: Context) {
         get() = pref.getString(PROFILE_NAME, "")
         set(profileName) {
             editor.putString(PROFILE_NAME, profileName)
+            editor.apply()
+        }
+
+    var uid: String?
+        get() = pref.getString(UID, "")
+        set(uid) {
+            editor.putString(UID, uid)
             editor.apply()
         }
 
@@ -93,10 +102,10 @@ class PrefManager(var _context: Context) {
             editor.apply()
         }
 
-    var profileSummary: String?
+    var profileAbout: String?
         get() = pref.getString(PROFILE_SUMMARY, "")
-        set(profileSummary) {
-            editor.putString(PROFILE_SUMMARY, profileSummary)
+        set(profileAbout) {
+            editor.putString(PROFILE_SUMMARY, profileAbout)
             editor.apply()
         }
 
@@ -142,6 +151,13 @@ class PrefManager(var _context: Context) {
             editor.apply()
         }
 
+    var inviteCode: String?
+        get() = pref.getString(INVITE_CODE, "")
+        set(inviteCode) {
+            editor.putString(INVITE_CODE, inviteCode)
+            editor.apply()
+        }
+
     var latestVersionCode: Int
         get() = pref.getInt(LATEST_VERSION_CODE, BuildConfig.VERSION_CODE)
         set(latestVersionCode) {
@@ -156,7 +172,7 @@ class PrefManager(var _context: Context) {
         this.profileExperience = profile.experience
         this.profileCompanyName = profile.company_name
         this.profileCompanyLogo = profile.company_logo
-        this.profileSummary = profile.about
+        this.profileAbout = profile.about
         this.profileSkills = profile.skills
         this.profileLinkedinPersonal = profile.personal_linkedin
         this.profileLinkedinCompany = profile.company_linkedin
@@ -165,4 +181,41 @@ class PrefManager(var _context: Context) {
         this.profileResume = profile.resume
         this.compId = profile.comp_id
     }
+
+    fun getProfile(): Profile{
+        val profile =  Profile()
+        profile.about = profileAbout
+        profile.name = profileName
+        profile.phone = profilePhone
+        profile.email = profileEmail
+        profile.experience = profileExperience
+        profile.company_name = profileCompanyName
+        profile.company_logo = profileCompanyLogo
+        profile.skills = profileSkills
+        profile.personal_linkedin = profileLinkedinPersonal
+        profile.company_linkedin = profileLinkedinCompany
+        profile.role = profileRole
+        profile.photo = profilePhoto
+        profile.resume = profileResume
+        profile.comp_id = compId
+        return profile
+    }
+
+//    val profile: Profile
+//        get() = Profile(
+//                profileAbout,
+//                profileName,
+//                profilePhone,
+//                profileEmail,
+//                profileExperience,
+//                profileCompanyName,
+//                profileCompanyLogo,
+//                profileSkills,
+//                profileLinkedinPersonal,
+//                profileLinkedinCompany,
+//                profileRole,
+//                profilePhoto,
+//                profileResume,
+//                compId
+//            )
 }

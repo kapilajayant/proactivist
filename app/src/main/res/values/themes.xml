@@ -35,4 +35,8 @@
         <item name="colorButtonNormal">@color/white</item>
     </style>
 
+    <style name="DefaultNumberPickerTheme" parent="Theme.Proactivists">
+        <item name="colorControlNormal">@color/transparent</item>
+    </style>
+
 </resources>

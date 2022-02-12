@@ -14,7 +14,7 @@ import com.jayant.proactivist.fragments.EditProfileFragment
 import com.jayant.proactivist.fragments.InviteCodeFragment
 import com.jayant.proactivist.utils.Constants
 
-class UserRoleActivity : AppCompatActivity() {
+class UserRoleActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallback {
 
     private lateinit var tv_enter_code: TextView
 
@@ -62,9 +62,13 @@ class UserRoleActivity : AppCompatActivity() {
         }
 
         tv_enter_code.setOnClickListener {
-            val fragment = InviteCodeFragment()
+            val fragment = InviteCodeFragment(this)
             fragment.show(supportFragmentManager, "")
         }
+
+    }
+
+    override fun addedInviteCode() {
 
     }
 }

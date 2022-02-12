@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class GetReferrersItem(
     var ref_gid: String,
-    var job_id: String?,
+    var job_id: String? = "",
     var referrer_name: String,
     var company_logo: String,
     var company_name: String,

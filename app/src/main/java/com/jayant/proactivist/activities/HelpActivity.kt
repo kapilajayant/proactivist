@@ -1,5 +1,6 @@
 package com.jayant.proactivist.activities
 
+import android.R.id
 import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
@@ -14,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jayant.proactivist.R
 import com.jayant.proactivist.fragments.HelpTopicFragment
 import com.jayant.proactivist.utils.Constants
+import android.R.id.message
+import java.net.URLEncoder
+
 
 class HelpActivity : AppCompatActivity() {
 
@@ -106,15 +110,34 @@ class HelpActivity : AppCompatActivity() {
     }
 
     private fun shareWhatsapp(message: String) {
-        val sendIntent = Intent()
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, message)
-        sendIntent.type = "text/plain"
-        sendIntent.setPackage("com.whatsapp")
-        sendIntent.component = ComponentName("com.whatsapp", "com.whatsapp.ContactPicker")
-        intent.putExtra("jid", PhoneNumberUtils.stripSeparators("919888232211") + "@s.whatsapp.net")
-        if (sendIntent.resolveActivity(packageManager) != null) {
-            startActivity(sendIntent)
+//        val sendIntent = Intent()
+//        sendIntent.action = Intent.ACTION_SEND
+//        sendIntent.putExtra(Intent.EXTRA_TEXT, message)
+//        sendIntent.type = "text/plain"
+//        sendIntent.setPackage("com.whatsapp")
+//        sendIntent.component = ComponentName("com.whatsapp", "com.whatsapp.Conversation")
+////        sendIntent.component = ComponentName("com.whatsapp", "com.whatsapp.ContactPicker")
+//        intent.putExtra("jid", PhoneNumberUtils.stripSeparators("8295019197") + "@s.whatsapp.net")
+//        if (sendIntent.resolveActivity(packageManager) != null) {
+//            startActivity(sendIntent)
+//        }
+//
+        val packageManager: PackageManager = packageManager
+        val i = Intent(Intent.ACTION_VIEW)
+
+        try {
+            val url =
+                "https://api.whatsapp.com/send?phone=+918295019197" + "&text=" + URLEncoder.encode(
+                    message,
+                    "UTF-8"
+                )
+            i.setPackage("com.whatsapp")
+            i.data = Uri.parse(url)
+            if (i.resolveActivity(packageManager) != null) {
+                startActivity(i)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
         }
     }
 

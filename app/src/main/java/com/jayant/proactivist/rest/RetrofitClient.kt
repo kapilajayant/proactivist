@@ -10,13 +10,12 @@ object RetrofitClient {
     private var retrofitCompany: Retrofit? = null
     private var retrofit: Retrofit? = null
     var companySearchBaseUrl = "https://autocomplete.clearbit.com/v1/companies/"
-    var baseUrl = "http://192.168.0.102:8000"
-//    var baseUrl = "https://staging.proactivist.in"
-//    var baseUrl = "https://prod.proactivist.in"
+    var baseUrl = "http://192.168.0.103:8000"
+//    var baseUrl = "https://limitless-atoll-08063.herokuapp.com"
 
-    var okHttpClient = OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .writeTimeout(10, TimeUnit.SECONDS)
+    var okHttpClient = OkHttpClient.Builder().connectTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
+        .writeTimeout(20, TimeUnit.SECONDS)
         .followRedirects(true)
         .addInterceptor(getInterceptor())
         .build()

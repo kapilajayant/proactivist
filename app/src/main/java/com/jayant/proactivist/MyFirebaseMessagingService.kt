@@ -12,6 +12,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
@@ -34,6 +35,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onNewToken(p0)
         val prefManager = PrefManager(this)
         prefManager.token = p0
+
+        val database = FirebaseDatabase.getInstance()
+        prefManager.uid?.let { database.reference.child("accounts").child(it).child("token").setValue(p0) }
     }
 
     override fun onMessageReceived(p0: RemoteMessage) {
@@ -44,9 +48,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val message = json["message"]
         val data = json["data"]
 
-        if (type != null) {
-            createNotification(title, message, url, type.toInt(), data)
-        }
+//        if (type != null) {
+//            createNotification(title, message, url, type.toInt(), data)
+//        }
     }
 
     private fun createNotification(title: String?, subject: String?, imageUri: String?, type: Int?, data: String?) {

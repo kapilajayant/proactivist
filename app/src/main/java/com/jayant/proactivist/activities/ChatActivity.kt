@@ -60,7 +60,7 @@ class ChatActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         tv_app_bar = findViewById(R.id.tv_app_bar)
         iv_back = findViewById(R.id.iv_back)
-        iv_profile = findViewById(R.id.iv_profile)
+        iv_profile = findViewById(R.id.iv_profile_chat)
         btn_send = findViewById(R.id.btn_send)
         et_chat = findViewById(R.id.et_chat)
         rv_chats = findViewById(R.id.rv_chats)

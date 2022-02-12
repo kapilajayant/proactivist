@@ -29,12 +29,17 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.messaging.FirebaseMessaging
+import com.jayant.proactivist.BuildConfig
 import com.jayant.proactivist.R
 import com.jayant.proactivist.SliderAdapter
 import com.jayant.proactivist.fragments.NoInternetFragment
 import com.jayant.proactivist.fragments.SelectUserRoleFragment
+import com.jayant.proactivist.fragments.StatusFragment
 import com.jayant.proactivist.models.Profile
 import com.jayant.proactivist.models.ResponseModel
 import com.jayant.proactivist.rest.APIService
@@ -190,6 +195,7 @@ class WelcomeActivity : AppCompatActivity() {
                 firebaseAuthWithGoogle(account)
             } catch (e: ApiException) {
                 e.printStackTrace()
+                DialogHelper.hideLoadingDialog()
                 // Google Sign In failed, update UI appropriately
                 Log.d("log_google", "Google sign in failed", e)
                 // ...
@@ -202,14 +208,13 @@ class WelcomeActivity : AppCompatActivity() {
         mAuth?.signInWithCredential(credential)
             ?.addOnCompleteListener(this,
                 OnCompleteListener { task: Task<AuthResult?> ->
-                    DialogHelper.hideLoadingDialog()
                     if (task.isSuccessful) {
                         dialog?.dismiss()
                         val user: FirebaseUser? = mAuth?.getCurrentUser()
                         user?.uid?.let {
                             getToken(it)
                             if(NetworkManager.getConnectivityStatusString(this@WelcomeActivity) != Constants.NO_INTERNET) {
-                                checkUser(it)
+                                checkUpdate(it)
                             }
                             else{
                                 val fragment = NoInternetFragment()
@@ -222,10 +227,41 @@ class WelcomeActivity : AppCompatActivity() {
                 })
     }
 
-    private fun checkUser(uid: String) {
+    private fun checkUpdate(uid: String) {
 
+        val database = FirebaseDatabase.getInstance()
+        val ref = database.getReference("current_version")
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val updatedVersion = dataSnapshot.getValue(Int::class.java)
+                val currentVersion = BuildConfig.VERSION_CODE
+                if (updatedVersion != null) {
+                    if(updatedVersion > currentVersion){
+                        DialogHelper.hideLoadingDialog()
+                        val fragment = StatusFragment(Constants.UPDATE)
+                        fragment.show(supportFragmentManager, "")
+                    }
+                    else{
+                        checkUser(uid)
+                    }
+                }
+                else{
+                    checkUser(uid)
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                checkUser(uid)
+            }
+        })
+
+    }
+
+    private fun checkUser(uid: String) {
+        val prefManager = PrefManager(this)
+        prefManager.uid = uid
         apiService.checkUser(uid).enqueue(object : Callback<ResponseModel> {
             override fun onResponse(call: Call<ResponseModel>, response: Response<ResponseModel>) {
+                DialogHelper.hideLoadingDialog()
                 if (response.isSuccessful) {
                     try {
                         if(response.code() == 200) {
@@ -244,12 +280,13 @@ class WelcomeActivity : AppCompatActivity() {
                             Toast.makeText(this@WelcomeActivity, response.body()?.message, Toast.LENGTH_SHORT).show()
                         }
                     } catch (e: Exception) {
+                        DialogHelper.hideLoadingDialog()
                         e.printStackTrace()
                     }
                 }
             }
-
             override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                DialogHelper.hideLoadingDialog()
                 t.printStackTrace()
             }
         })
@@ -261,15 +298,9 @@ class WelcomeActivity : AppCompatActivity() {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
-
-            // Get new FCM registration token
             val token = task.result
-
-            // Log and toast
-//            val msg = getString(R.string.msg_token_fmt, token)
             val database = FirebaseDatabase.getInstance()
             database.reference.child("accounts").child(uid).child("token").setValue(token)
-
             Log.d(TAG, token)
         })
     }

@@ -12,9 +12,9 @@
     <color name="yellow">#FFEB3B</color>
     <color name="red">#FF0000</color>
     <color name="green">#0DCD0D</color>
-    <color name="red_tint">#66FF0000</color>
-    <color name="green_tint">#660DCD0D</color>
-    <color name="yellow_tint">#66FFBC00</color>
+    <color name="red_tint">#FF6363</color>
+    <color name="green_tint">#BAFFB4</color>
+    <color name="yellow_tint">#FFFDA2</color>
     <color name="blue">#2A75F6</color>
     <color name="pink">#E61C60</color>
 

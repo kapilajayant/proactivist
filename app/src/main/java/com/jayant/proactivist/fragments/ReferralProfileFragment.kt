@@ -1,9 +1,14 @@
 package com.jayant.proactivist.fragments
 
+import android.content.Intent
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.*
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.jayant.proactivist.R
+import com.jayant.proactivist.activities.ReferrerProfileActivity
 import com.jayant.proactivist.models.ResponseModel
 import com.jayant.proactivist.models.get_referrers.GetReferrersItem
 import com.jayant.proactivist.rest.APIService
@@ -32,15 +38,16 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.awaitResponse
 
-class ReferralProfileFragment(var photo: String, var referrer: GetReferrersItem?) : BottomSheetDialogFragment() {
+class ReferralProfileFragment(var referrer: GetReferrersItem?, val referCallback: ReferCallback) : BottomSheetDialogFragment() {
 
     private var et_job_id: EditText? = null
     private var tv_profile_name: TextView? = null
     private var tv_company_name: TextView? = null
+    private var tv_info: TextView? = null
     private lateinit var tv_profile: TextView
-    private lateinit var iv_profile: ImageView
+    private lateinit var iv_profile: CircleImageView
     private lateinit var iv_logo: CircleImageView
-    private lateinit var card_ask: CardView
+    private lateinit var card_ask: Button
     private lateinit var linear_ask: LinearLayout
     lateinit var apiService: APIService
 
@@ -59,10 +66,10 @@ class ReferralProfileFragment(var photo: String, var referrer: GetReferrersItem?
         iv_profile = view.findViewById(R.id.iv_profile)
         iv_logo = view.findViewById(R.id.iv_logo)
         tv_company_name = view.findViewById(R.id.tv_company_name)
+        tv_info = view.findViewById(R.id.tv_info)
         tv_profile_name = view.findViewById(R.id.tv_profile_name)
         et_job_id = view.findViewById(R.id.et_job_id)
         card_ask = view.findViewById(R.id.card_ask)
-        linear_ask = view.findViewById(R.id.linear_ask)
         tv_profile = view.findViewById(R.id.tv_profile)
 
         tv_profile_name?.text = referrer?.company_name
@@ -71,7 +78,42 @@ class ReferralProfileFragment(var photo: String, var referrer: GetReferrersItem?
         Glide.with(requireContext()).load(referrer?.company_logo).into(iv_profile)
 //        Glide.with(requireContext()).load(photo).into(iv_logo)
 
+        val text = "Your profile will be shared with "
+        val ref = referrer?.referrer_name?.substringBefore(" ")
         card_ask.isEnabled = false
+        val spannable = SpannableString(text + ref)
+        ref?.length?.let {
+            spannable.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.purple_500)),
+                text.length,
+                text.length + it,
+                Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+            )
+            spannable.setSpan(
+                StyleSpan(Typeface.BOLD),
+                text.length,
+                text.length + it,
+                Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+            )
+            spannable.setSpan(
+                RelativeSizeSpan(1.5f),
+                text.length,
+                text.length + it,
+                Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+            )
+            spannable.setSpan(
+                UnderlineSpan(),
+                text.length,
+                text.length + it,
+                0)
+        }
+
+        tv_info?.text = spannable
+        tv_info?.setOnClickListener {
+            val intent = Intent(requireContext(), ReferrerProfileActivity::class.java)
+            intent.putExtra("referrer", referrer)
+            startActivity(intent)
+        }
 
         et_job_id?.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -84,41 +126,47 @@ class ReferralProfileFragment(var photo: String, var referrer: GetReferrersItem?
 
             override fun afterTextChanged(p0: Editable?) {
                 if(p0?.isNotEmpty() == true){
-                    linear_ask.background =
-                        context?.let { ContextCompat.getColor(it, R.color.black) }?.let {
-                            ColorDrawable(
-                                it
-                            )
-                        }
+//                    linear_ask.background =
+//                        context?.let { ContextCompat.getColor(it, R.color.black) }?.let {
+//                            ColorDrawable(
+//                                it
+//                            )
+//                        }
                     card_ask.isEnabled = true
                 }
                 else{
-                    linear_ask.background =
-                        context?.let { ContextCompat.getColor(it, R.color.gray) }?.let {
-                            ColorDrawable(
-                                it
-                            )
-                        }
-                    card_ask.isEnabled = false
+//                    linear_ask.background =
+//                        context?.let { ContextCompat.getColor(it, R.color.gray) }?.let {
+//                            ColorDrawable(
+//                                it
+//                            )
+//                        }
+//                    card_ask.isEnabled = false
                 }
             }
 
         })
         card_ask.setOnClickListener {
-            val mAuth = FirebaseAuth.getInstance()
-            val currentUser = mAuth.currentUser
-            val database = FirebaseDatabase.getInstance()
-            referrer?.ref_gid?.let { referrerId -> currentUser?.uid?.let { candidateId ->
+            if(et_job_id?.text.toString().contains("http")) {
+                val mAuth = FirebaseAuth.getInstance()
+                val currentUser = mAuth.currentUser
+                val database = FirebaseDatabase.getInstance()
+                referrer?.ref_gid?.let { referrerId ->
+                    currentUser?.uid?.let { candidateId ->
 
-                if (NetworkManager.getConnectivityStatusString(requireContext()) != Constants.NO_INTERNET) {
-                    sendRequest(candidateId)
-                }
-                else {
-                    val fragment = NoInternetFragment()
-                    fragment.show(parentFragmentManager, "")
-                }
+                        if (NetworkManager.getConnectivityStatusString(requireContext()) != Constants.NO_INTERNET) {
+                            sendRequest(candidateId)
+                        } else {
+                            val fragment = NoInternetFragment()
+                            fragment.show(parentFragmentManager, "")
+                        }
 
-            } }
+                    }
+                }
+            }
+            else{
+                Toast.makeText(requireContext(), "Invalid job link!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         return view
@@ -144,6 +192,7 @@ class ReferralProfileFragment(var photo: String, var referrer: GetReferrersItem?
                         if(response.code() == 200){
                             Toast.makeText(requireContext(), "Request sent!", Toast.LENGTH_SHORT).show()
                             dismiss()
+                            referCallback.closeReferrer()
                         }
                         else {
                             Toast.makeText(requireContext(), response.body()?.message, Toast.LENGTH_SHORT).show()
@@ -164,5 +213,7 @@ class ReferralProfileFragment(var photo: String, var referrer: GetReferrersItem?
         })
     }
 
-
+}
+interface ReferCallback{
+    fun closeReferrer()
 }

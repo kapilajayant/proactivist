@@ -94,12 +94,19 @@ class ChatListActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 chatList.clear()
                 total = snapshot.childrenCount.toInt()
-                for (item in snapshot.children) {
-                    item.key?.let {
-                        getProfile(it, role)
+                if(total == 0){
+
+                    linear_empty.visibility = View.VISIBLE
+                    rv_chats.visibility = View.GONE
+                    DialogHelper.hideLoadingDialog()
+                }
+                else {
+                    for (item in snapshot.children) {
+                        item.key?.let {
+                            getProfile(it, role)
+                        }
                     }
                 }
-                DialogHelper.hideLoadingDialog()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -129,6 +136,8 @@ class ChatListActivity : AppCompatActivity() {
                                         chatListAdapter.notifyDataSetChanged()
                                     }
                                     if (current == total) {
+
+                                        DialogHelper.hideLoadingDialog()
                                         if (chatList.isEmpty()) {
                                             linear_empty.visibility = View.VISIBLE
                                             rv_chats.visibility = View.GONE
@@ -138,7 +147,8 @@ class ChatListActivity : AppCompatActivity() {
                                         }
                                     }
                                     current++
-                                } else {
+                                }
+                                else {
                                     if (current == total) {
                                         if (chatList.isEmpty()) {
                                             linear_empty.visibility = View.VISIBLE

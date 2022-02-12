@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -33,6 +34,7 @@ class ViewApplicationsActivity : AppCompatActivity() {
     private lateinit var reference: Query
     private lateinit var listener: ValueEventListener
     private lateinit var rv_applications: RecyclerView
+    private lateinit var swipe: SwipeRefreshLayout
     private lateinit var tv_app_bar: TextView
     private lateinit var iv_back: ImageView
     private lateinit var chip_reject: Chip
@@ -53,12 +55,16 @@ class ViewApplicationsActivity : AppCompatActivity() {
         chip_reject = findViewById(R.id.chip_reject)
         chip_pending = findViewById(R.id.chip_pending)
         chip_accept = findViewById(R.id.chip_accept)
+        swipe = findViewById(R.id.swipe)
 
         iv_back.setOnClickListener {
             finish()
         }
 
-        getData()
+        swipe.setOnRefreshListener {
+            swipe.isRefreshing = true
+            getData()
+        }
 
         chip_reject.setOnClickListener {
             if(!chip_reject.isSelected){
@@ -133,6 +139,11 @@ class ViewApplicationsActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        getData()
+    }
+
     private fun getData() {
         applicationList.clear()
         val prefManager = PrefManager(this)
@@ -140,9 +151,11 @@ class ViewApplicationsActivity : AppCompatActivity() {
         prefManager.profileRole?.let {
             if (uid != null) {
                 if(NetworkManager.getConnectivityStatusString(this@ViewApplicationsActivity) != Constants.NO_INTERNET) {
+                    DialogHelper.showLoadingDialog(this)
                     getApplications(uid, it)
                 }
                 else{
+                    swipe.isRefreshing = false
                     val fragment = NoInternetFragment()
                     fragment.show(supportFragmentManager, "")
                 }
@@ -156,6 +169,7 @@ class ViewApplicationsActivity : AppCompatActivity() {
                 call: Call<ListResponseModel>,
                 response: Response<ListResponseModel>
             ){
+                swipe.isRefreshing = false
                 DialogHelper.hideLoadingDialog()
                 if (response.isSuccessful) {
                     try {
@@ -175,11 +189,13 @@ class ViewApplicationsActivity : AppCompatActivity() {
                             ).show()
                         }
                     } catch (e: Exception) {
+                        swipe.isRefreshing = false
                         e.printStackTrace()
                     }
                 }
             }
             override fun onFailure(call: Call<ListResponseModel>, t: Throwable) {
+                swipe.isRefreshing = false
                 t.printStackTrace()
                 DialogHelper.hideLoadingDialog()
             }

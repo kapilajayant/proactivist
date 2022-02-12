@@ -13,11 +13,11 @@ object DialogHelper {
 
     fun showLoadingDialog(activity: Activity){
         val builder = AlertDialog.Builder(activity)
+        builder.setInverseBackgroundForced(true)
         val view: View = activity.layoutInflater.inflate(R.layout.dialog_loading, null)
         builder.setView(view)
 
         alertDialog = builder.create()
-
         alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertDialog?.setCanceledOnTouchOutside(true)
         alertDialog?.show()

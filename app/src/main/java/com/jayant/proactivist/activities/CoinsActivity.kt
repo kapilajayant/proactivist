@@ -4,30 +4,27 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.jayant.proactivist.R
-import de.hdodenhof.circleimageview.CircleImageView
-import java.lang.Exception
-import android.content.Intent
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
-import com.jayant.proactivist.BuildConfig
+import com.jayant.proactivist.R
 import com.jayant.proactivist.fragments.InviteCodeFragment
 import com.jayant.proactivist.models.ResponseModel
 import com.jayant.proactivist.rest.APIService
 import com.jayant.proactivist.rest.ApiUtils
-import com.jayant.proactivist.utils.PrefManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.ArrayList
 
 
-class CoinsActivity : AppCompatActivity() {
+class CoinsActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallback {
 
     private lateinit var iv_back: ImageView
     private lateinit var iv_others: ImageView
@@ -57,17 +54,12 @@ class CoinsActivity : AppCompatActivity() {
         tv_coins = findViewById(R.id.tv_coins)
         tv_enter_code = findViewById(R.id.tv_enter_code)
 
-        val prefManager = PrefManager(this)
-        inviteCode = prefManager.profileRole?.substring(0, 3) + "_" + FirebaseAuth.getInstance().currentUser?.uid
-
-        tv_code.text = inviteCode
-
         iv_back.setOnClickListener {
             finish()
         }
 
         iv_whatsapp.setOnClickListener {
-            var message = "I'm inviting you to join Proactivist. \nGet 50 coins by using my invite code: \n$inviteCode \nhttps://play.google.com/store/apps/details?id=com.jayant.proactivist"
+            var message = "I'm inviting you to join Proactivist. \nGet 50 coins by using my invite code: \n\n\nhttps://proactivist.in?inviteCode=$inviteCode \n\n\n Download the app now https://play.google.com/store/apps/details?id=com.jayant.proactivist"
             val isWhatsappInstalled: Boolean = whatsappInstalledOrNot("com.whatsapp")
             if (isWhatsappInstalled) {
                 try {
@@ -86,7 +78,7 @@ class CoinsActivity : AppCompatActivity() {
         }
 
         iv_others.setOnClickListener {
-            var message = "I'm inviting you to join Proactivist. Get 50 coins by using my invite code: $inviteCode https://play.google.com/store/apps/details?id=com.jayant.proactivist"
+            var message = "I'm inviting you to join Proactivist. \nGet 50 coins by using my invite code: \n\n\nhttps://proactivist.in?inviteCode=$inviteCode \n\n\n Download the app now https://play.google.com/store/apps/details?id=com.jayant.proactivist"
             shareOthers(message)
         }
 
@@ -96,17 +88,22 @@ class CoinsActivity : AppCompatActivity() {
             (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(clip)
         }
         tv_enter_code.setOnClickListener {
-            val fragment = InviteCodeFragment()
+            val fragment = InviteCodeFragment(this)
             fragment.show(supportFragmentManager, "")
         }
     }
 
     private fun shareWhatsapp(message: String) {
         val sendIntent = Intent()
+        val arrayList = ArrayList<Uri>()
+        arrayList.add(message.toUri())
+        arrayList.add(inviteCode.toUri())
         sendIntent.action = Intent.ACTION_SEND
         sendIntent.putExtra(Intent.EXTRA_TEXT, message)
         sendIntent.type = "text/plain"
+//        sendIntent.putParcelableArrayListExtra(Intent.EXTRA_TEXT, arrayList)
         sendIntent.setPackage("com.whatsapp")
+        sendIntent.putExtra(Intent.EXTRA_TITLE, "Join Proactivist")
         sendIntent.component = ComponentName("com.whatsapp", "com.whatsapp.ContactPicker")
         if (sendIntent.resolveActivity(packageManager) != null) {
             startActivity(sendIntent)
@@ -129,6 +126,7 @@ class CoinsActivity : AppCompatActivity() {
     private fun shareOthers(message: String){
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TITLE, "Join Proactivist")
         sendIntent.putExtra(
             Intent.EXTRA_TEXT,
             message
@@ -152,6 +150,14 @@ class CoinsActivity : AppCompatActivity() {
                                 response.body()?.getCoinsResponse()?.coins.let {
                                     tv_coins.text = it.toString()
                                 }
+                                response.body()?.getCoinsResponse()?.invite_code.let {
+                                    inviteCode = it.toString()
+                                    tv_code.text = inviteCode
+                                }
+                                response.body()?.getCoinsResponse()?.already_invited.let {
+                                    if(it == true)
+                                    tv_enter_code.visibility = View.GONE
+                                }
                             }
                             else {
                                 Toast.makeText(this@CoinsActivity, response.body()?.message, Toast.LENGTH_SHORT).show()
@@ -171,6 +177,10 @@ class CoinsActivity : AppCompatActivity() {
 
             })
         }
+    }
+
+    override fun addedInviteCode() {
+        getCoins()
     }
 
 }

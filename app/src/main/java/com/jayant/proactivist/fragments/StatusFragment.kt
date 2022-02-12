@@ -50,20 +50,17 @@ class StatusFragment(var status: Int) : SuperBottomSheetFragment() {
             Constants.REJECTED ->{
                 tv_title.text = "Rejected"
                 tv_desc.text = "Your profile didn't seem to be a fit for the role to the referrer."
-                color = ContextCompat.getColor(requireContext(), R.color.red)
+                color = ContextCompat.getColor(requireContext(), R.color.red_tint)
             }
             Constants.ACCEPTED ->{
                 tv_title.text = "Accepted"
                 tv_desc.text = "Your profile has been accepted. Referrer will submit your application and we will verify it soon."
-                color = ContextCompat.getColor(requireContext(), R.color.green)
+                color = ContextCompat.getColor(requireContext(), R.color.green_tint)
             }
             Constants.PENDING ->{
-                card.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.black))
-                tv_title.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                tv_desc.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                 tv_title.text = "Pending"
                 tv_desc.text = "Referrer is yet to decide about your application. Check again in some time."
-                color = ContextCompat.getColor(requireContext(), R.color.yellow)
+                color = ContextCompat.getColor(requireContext(), R.color.yellow_tint)
             }
             Constants.SUBMITTED ->{
                 tv_title.text = "Submitted"
@@ -76,6 +73,9 @@ class StatusFragment(var status: Int) : SuperBottomSheetFragment() {
                 color = ContextCompat.getColor(requireContext(), R.color.blue)
             }
             Constants.UPDATE ->{
+                tv_title.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tv_desc.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                card.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
                 isCancelable = false
                 color = ContextCompat.getColor(requireContext(), R.color.purple_500)
                 btn_update.visibility = View.VISIBLE

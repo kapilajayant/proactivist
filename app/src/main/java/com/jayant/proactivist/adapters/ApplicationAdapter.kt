@@ -144,6 +144,7 @@ class ApplicationAdapter(var context: Context, var applicationsList: ArrayList<A
                 intent.putExtra("status", application.status)
                 intent.putExtra("profileId", application.uid)
                 intent.putExtra("application_id", application.application_id)
+                intent.putExtra("job_id", application.job_id)
                 context.startActivity(intent)
             }
             else{

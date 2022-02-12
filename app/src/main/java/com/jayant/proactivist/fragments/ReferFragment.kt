@@ -35,7 +35,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ReferFragment : Fragment() {
+class ReferFragment : Fragment(), ReferCallback {
 
     private var currentUser: FirebaseUser? = null
     lateinit var apiService: APIService
@@ -99,7 +99,7 @@ class ReferFragment : Fragment() {
         val prefManager = context?.let { PrefManager(it) }
 
         if (prefManager?.profileRole == Constants.REFERRER) {
-            card_search.visibility = View.GONE
+//            card_search.visibility = View.GONE
         }
 
         setupProfile()
@@ -147,6 +147,7 @@ class ReferFragment : Fragment() {
         rv_refer.apply {
             profilesAdapter = ProfileAdapter(context, uiType, requireFragmentManager())
             adapter = profilesAdapter
+            profilesAdapter.setReferrerCallback(this@ReferFragment)
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
@@ -166,7 +167,8 @@ class ReferFragment : Fragment() {
                                     if (it.size == 0) {
                                         rv_refer.visibility = View.GONE
                                         linear_empty.visibility = View.VISIBLE
-                                    } else {
+                                    }
+                                    else {
                                         linear_empty.visibility = View.GONE
                                         rv_refer.visibility = View.VISIBLE
                                         profilesAdapter.setCandidatesList(
@@ -303,6 +305,10 @@ class ReferFragment : Fragment() {
             val fragment = NoInternetFragment()
             fragment.show(parentFragmentManager, "")
         }
+    }
+
+    override fun closeReferrer() {
+
     }
 
 }

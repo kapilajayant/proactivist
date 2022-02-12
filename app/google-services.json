@@ -8,6 +8,72 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:51905460582:android:3d35cfad4b60143dc3b0a7",
+        "android_client_info": {
+          "package_name": "com.jayant.chattest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51905460582-kr5j02ve887qc8k95jchk7nkvji22q4i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeTUbx2gyX70UX2ZXaXsXmGIPT1PtKrIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51905460582-kr5j02ve887qc8k95jchk7nkvji22q4i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51905460582:android:2cd5bd90b0d3120ec3b0a7",
+        "android_client_info": {
+          "package_name": "com.jayant.proactivist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51905460582-fjuubhdn3fjtbpqbajgsduomcspcn6bq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jayant.proactivist",
+            "certificate_hash": "dcb1b623d8a8beebea608cc7557be0f91cfd9d66"
+          }
+        },
+        {
+          "client_id": "51905460582-kr5j02ve887qc8k95jchk7nkvji22q4i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeTUbx2gyX70UX2ZXaXsXmGIPT1PtKrIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51905460582-kr5j02ve887qc8k95jchk7nkvji22q4i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:51905460582:android:4b1f105e8f99ea4fc3b0a7",
         "android_client_info": {
           "package_name": "com.jayant.proactivists"
