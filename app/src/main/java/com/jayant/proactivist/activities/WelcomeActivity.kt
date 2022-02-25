@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import com.jayant.proactivist.BuildConfig
 import com.jayant.proactivist.R
 import com.jayant.proactivist.SliderAdapter
@@ -212,7 +213,6 @@ class WelcomeActivity : AppCompatActivity() {
                         dialog?.dismiss()
                         val user: FirebaseUser? = mAuth?.getCurrentUser()
                         user?.uid?.let {
-                            getToken(it)
                             if(NetworkManager.getConnectivityStatusString(this@WelcomeActivity) != Constants.NO_INTERNET) {
                                 checkUpdate(it)
                             }
@@ -284,24 +284,19 @@ class WelcomeActivity : AppCompatActivity() {
                         e.printStackTrace()
                     }
                 }
+                else{
+                    try {
+                        val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                        Toast.makeText(this@WelcomeActivity, errorResponse.message, Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
             override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
                 DialogHelper.hideLoadingDialog()
                 t.printStackTrace()
             }
-        })
-    }
-
-    private fun getToken(uid: String){
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-            val token = task.result
-            val database = FirebaseDatabase.getInstance()
-            database.reference.child("accounts").child(uid).child("token").setValue(token)
-            Log.d(TAG, token)
         })
     }
 }

@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken
 import com.jayant.proactivist.activities.ConfirmActivity
 import com.jayant.proactivist.activities.HomeActivity
 import com.jayant.proactivist.activities.NotificationActivity
+import com.jayant.proactivist.activities.SplashActivity
 import com.jayant.proactivist.models.Confirm
 import com.jayant.proactivist.models.Profile
 import com.jayant.proactivist.utils.Constants
@@ -28,6 +29,7 @@ import com.jayant.proactivist.utils.PrefManager
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -48,19 +50,20 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val message = json["message"]
         val data = json["data"]
 
-//        if (type != null) {
-//            createNotification(title, message, url, type.toInt(), data)
-//        }
+        if (type != null) {
+            createNotification(title, message, url, type.toInt(), data)
+        }
     }
 
     private fun createNotification(title: String?, subject: String?, imageUri: String?, type: Int?, data: String?) {
         try {
-            var intent: Intent? = null
+
+            val gson = Gson()
+            val itemType = object : TypeToken<Confirm>() {}.type
+            val jsonData = gson.fromJson<Confirm>(data, itemType)
+            var intent = Intent(this, SplashActivity::class.java)
             when(type) {
                 Constants.CONFIRMATION_REJECTED -> {
-                    val gson = Gson()
-                    val itemType = object : TypeToken<Confirm>() {}.type
-                    val jsonData = gson.fromJson<Confirm>(data, itemType)
                     intent = Intent(this, ConfirmActivity::class.java)
                     intent.putExtra("ref", jsonData.ref)
                     intent.putExtra("can", jsonData.can)
@@ -73,18 +76,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     intent = Intent(Intent.ACTION_VIEW, uri)
                 }
             }
-            val pendingIntent = PendingIntent.getActivity(
-                applicationContext, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT
-            )
-            val channelId = "123"
+            val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            val channelId = Date().time.toString()
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val notificationBuilder: NotificationCompat.Builder =
                 NotificationCompat.Builder(this, channelId)
                     .setSmallIcon(R.drawable.logo)
-                    .setStyle(
-                        NotificationCompat.BigPictureStyle().bigPicture(getBitmapfromUrl(imageUri))
-                    )
                     .setContentTitle(title)
                     .setContentText(subject)
                     .setAutoCancel(true)

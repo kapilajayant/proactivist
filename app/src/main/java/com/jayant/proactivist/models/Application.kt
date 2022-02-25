@@ -15,4 +15,5 @@ data class Application(
     var company_logo: String? = "",
     var status: Int? = Constants.PENDING,
     var timestamp: String? = "",
+    var feedback: String? = "",
 ) : Parcelable

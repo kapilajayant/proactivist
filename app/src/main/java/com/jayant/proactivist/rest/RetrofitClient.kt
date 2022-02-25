@@ -8,14 +8,17 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     private var retrofitCompany: Retrofit? = null
+    private var retrofitNotification: Retrofit? = null
     private var retrofit: Retrofit? = null
+    var notificationUrl = "https://fcm.googleapis.com"
     var companySearchBaseUrl = "https://autocomplete.clearbit.com/v1/companies/"
-    var baseUrl = "http://192.168.0.103:8000"
-//    var baseUrl = "https://limitless-atoll-08063.herokuapp.com"
+//    var baseUrl = "http://192.168.0.103:8000"
+    var baseUrl = "https://limitless-atoll-08063.herokuapp.com"
 
     var okHttpClient = OkHttpClient.Builder().connectTimeout(20, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)
         .writeTimeout(20, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)
         .followRedirects(true)
         .addInterceptor(getInterceptor())
         .build()
@@ -45,4 +48,18 @@ object RetrofitClient {
             }
             return retrofit
         }
+
+    @JvmStatic
+    val notificationClient: Retrofit?
+        get() {
+            if (retrofitNotification == null) {
+                retrofitNotification = Retrofit.Builder()
+                    .baseUrl(notificationUrl)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+            }
+            return retrofitNotification
+        }
+
 }

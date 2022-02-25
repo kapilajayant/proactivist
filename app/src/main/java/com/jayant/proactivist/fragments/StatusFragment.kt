@@ -48,6 +48,9 @@ class StatusFragment(var status: Int) : SuperBottomSheetFragment() {
 
         when(status){
             Constants.REJECTED ->{
+                card.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+                tv_title.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tv_desc.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tv_title.text = "Rejected"
                 tv_desc.text = "Your profile didn't seem to be a fit for the role to the referrer."
                 color = ContextCompat.getColor(requireContext(), R.color.red_tint)
@@ -63,11 +66,17 @@ class StatusFragment(var status: Int) : SuperBottomSheetFragment() {
                 color = ContextCompat.getColor(requireContext(), R.color.yellow_tint)
             }
             Constants.SUBMITTED ->{
+                card.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+                tv_title.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tv_desc.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tv_title.text = "Submitted"
                 tv_desc.text = "Referrer has submitted your profile and we are confirming that from our end."
                 color = ContextCompat.getColor(requireContext(), R.color.purple_200)
             }
             Constants.COMPLETED ->{
+                card.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+                tv_title.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tv_desc.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tv_title.text = "Completed"
                 tv_desc.text = "Your referral is complete and we have verified from our end."
                 color = ContextCompat.getColor(requireContext(), R.color.blue)

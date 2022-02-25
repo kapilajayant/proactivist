@@ -12,13 +12,14 @@
         android:theme="@style/Theme.Proactivists"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.ArticleListActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.NotificationActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.AboutUsActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.ChatListActivity"
             android:exported="true" />
@@ -65,16 +66,20 @@
             android:name=".activities.JobDetailsActivity"
             android:exported="true" />
         <activity
+            android:launchMode="singleTask"
             android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="proactivist.in"
                     android:scheme="https" />
@@ -93,6 +98,7 @@
             android:name=".activities.HomeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|stateVisible" />
+
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
@@ -105,12 +111,12 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
     </application>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

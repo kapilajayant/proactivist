@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import com.jayant.proactivist.R
 import com.jayant.proactivist.adapters.ChatsListAdapter
 import com.jayant.proactivist.fragments.NoInternetFragment
@@ -95,7 +96,6 @@ class ChatListActivity : AppCompatActivity() {
                 chatList.clear()
                 total = snapshot.childrenCount.toInt()
                 if(total == 0){
-
                     linear_empty.visibility = View.VISIBLE
                     rv_chats.visibility = View.GONE
                     DialogHelper.hideLoadingDialog()
@@ -182,6 +182,15 @@ class ChatListActivity : AppCompatActivity() {
                                 }
                             }
                             current++
+                        }
+                    }
+
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(this@ChatListActivity, errorResponse.message, Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package com.jayant.proactivist.rest;
 
+import com.google.gson.JsonObject
 import com.jayant.proactivist.models.ListResponseModel
 import com.jayant.proactivist.models.ResponseModel
 import okhttp3.RequestBody
@@ -45,9 +46,22 @@ interface APIService {
     fun addInviteCode(@Query("invite_code") invite_code: String, @Query("uid") uid: String): Call<ResponseModel>
 
     @GET("/rest/search")
-    fun search(@Query("search_term") invite_code: String): Call<ListResponseModel>
+    fun search(@Query("search_term") search_term: String, @Query("uid") uid: String): Call<ListResponseModel>
 
-    @GET("/rest/feedback/post")
+    @GET("/rest/topics/get")
+    fun getTopics(): Call<ListResponseModel>
+
+    @GET("/rest/articles/get")
+    fun getArticles(@Query("topic") topic: String): Call<ListResponseModel>
+
+    @POST("/rest/feedback/post")
     fun feedback(@Body body: RequestBody): Call<ResponseModel>
+
+    @Headers(
+        "Authorization: key=AAAADBXOeWY:APA91bEuScVnK6_uSl0qaOPkJMFasXx2Tu5cyxIc0HFimEQeakA-OVygUd7YKOonmt5yiBBGlNmnpmSkL1RCkqBn3igECc3SJkEOCrCFj_lYezkAOHKZgyfai4sUVCCM3kozj2zjw2Bs",
+        "Content-Type: application/json",
+    )
+    @POST("/fcm/send")
+    fun sendNotification(@Body body: RequestBody): Call<JsonObject>
 
 }

@@ -2,6 +2,7 @@ package com.jayant.proactivist.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import com.jayant.proactivist.BuildConfig
 import com.jayant.proactivist.R
 import com.jayant.proactivist.activities.ProfileActivity
@@ -25,15 +30,19 @@ import com.jayant.proactivist.activities.SearchActivity
 import com.jayant.proactivist.activities.ViewApplicationsActivity
 import com.jayant.proactivist.adapters.ProfileAdapter
 import com.jayant.proactivist.models.ListResponseModel
+import com.jayant.proactivist.models.ResponseModel
 import com.jayant.proactivist.rest.APIService
 import com.jayant.proactivist.rest.ApiUtils
-import com.jayant.proactivist.utils.Constants
-import com.jayant.proactivist.utils.DialogHelper
-import com.jayant.proactivist.utils.NetworkManager
-import com.jayant.proactivist.utils.PrefManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
+
+import android.graphics.Typeface
+import com.jayant.proactivist.utils.*
+
+import smartdevelop.ir.eram.showcaseviewlib.GuideView
+import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener
 
 class ReferFragment : Fragment(), ReferCallback {
 
@@ -124,6 +133,22 @@ class ReferFragment : Fragment(), ReferCallback {
         rv_refer = view.findViewById<RecyclerView>(R.id.rv_refer)
         tvCount = view.findViewById(R.id.tvCount)
         linear_empty = view.findViewById<LinearLayout>(R.id.linear_empty)
+        val guideCount = prefManager?.guideCount
+        GuideManager.showGuide(requireContext(), iv_applications, "Applications", "View your applications here", 1) {
+            guideCount?.plus(1)?.let {
+                prefManager.guideCount = it
+            }
+            GuideManager.showGuide(requireContext(), iv_profile, "My Profile", "View and edit your profile", 2){
+                guideCount?.plus(1)?.let {
+                    prefManager.guideCount = it
+                }
+                GuideManager.showGuide(requireContext(), card_search, "Search Referrers/Companies", "Directly search companies and referrers and ask for a referral", 3){
+                    guideCount?.plus(1)?.let {
+                        prefManager.guideCount = it
+                    }
+                }
+            }
+        }
 
         return view
     }
@@ -134,10 +159,12 @@ class ReferFragment : Fragment(), ReferCallback {
             swipe.isRefreshing = false
             val prefManager = PrefManager(it)
             if (prefManager.profileRole == Constants.REFERRER) {
+                card_search.visibility = View.GONE
                 getCandidates()
 //                getCandidatesFirebase()
                 uiType = Constants.SHOW_CANDIDATES_LIST
             } else {
+                card_search.visibility = View.VISIBLE
                 getReferrers()
 //                getReferrersFirebase()
                 uiType = Constants.SHOW_COMPANIES_LIST
@@ -188,6 +215,15 @@ class ReferFragment : Fragment(), ReferCallback {
                             DialogHelper.hideLoadingDialog()
                             rv_refer.visibility = View.GONE
                             linear_empty.visibility = View.VISIBLE
+                            e.printStackTrace()
+                        }
+                    }
+
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(requireContext(), errorResponse.message, Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
                             e.printStackTrace()
                         }
                     }
@@ -242,6 +278,14 @@ class ReferFragment : Fragment(), ReferCallback {
                             linear_empty.visibility = View.VISIBLE
                         }
                     }
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(requireContext(), errorResponse.message, Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                 }
 
                 override fun onFailure(call: Call<ListResponseModel>, t: Throwable) {
@@ -272,7 +316,7 @@ class ReferFragment : Fragment(), ReferCallback {
     private fun setupProfile() {
         context?.let { context ->
             currentUser = FirebaseAuth.getInstance().currentUser
-            tv_profile_name.text = "Hi " + currentUser?.displayName
+            tv_profile_name.text = "Hi " + currentUser?.displayName?.substringBefore(" ")
 
             Glide.with(context).load(currentUser?.photoUrl.toString())
                 .apply(RequestOptions.circleCropTransform()).into(iv_profile)

@@ -2,20 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_feed"
-        android:icon="@drawable/ic_feed"
-        android:visible="false"
-        android:title="Feed" />
-
-    <item
         android:id="@+id/menu_jobs"
-        android:icon="@drawable/ic_work"
-        android:title="Jobs" />
+        android:icon="@drawable/ic_feed"
+        android:title="Home" />
 
     <item
         android:id="@+id/menu_learn"
-        android:icon="@drawable/ic_explore_black_24dp"
+        android:icon="@drawable/ic_learn_placeholder"
         android:title="Learn" />
+
+    <item
+        android:id="@+id/menu_shop"
+        android:icon="@drawable/ic_shop"
+        android:title="Shop" />
 
     <item
         android:id="@+id/menu_settings"

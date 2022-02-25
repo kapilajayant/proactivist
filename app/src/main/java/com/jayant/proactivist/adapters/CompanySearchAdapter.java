@@ -40,8 +40,7 @@ public class CompanySearchAdapter extends ArrayAdapter<CompanySuggestion> {
         try {
 
             if (view == null) {
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(resource, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
             }
 
             TextView tv_job_title = (TextView) view.findViewById(R.id.tv_job_title);
@@ -71,6 +70,10 @@ public class CompanySearchAdapter extends ArrayAdapter<CompanySuggestion> {
     @Override
     public int getCount() {
         return suggestions.size();
+    }
+
+    public void setList(CompanySuggestion suggestion){
+        this.suggestions.add(suggestion);
     }
 
 }

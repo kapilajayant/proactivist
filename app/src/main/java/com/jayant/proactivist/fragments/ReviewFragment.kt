@@ -9,9 +9,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 import com.jayant.proactivist.R
 import com.jayant.proactivist.models.ResponseModel
 import com.jayant.proactivist.rest.APIService
@@ -37,7 +39,7 @@ class ReviewFragment : BottomSheetDialogFragment() {
     private lateinit var chip_feedback: Chip
     private lateinit var chip_issue: Chip
     private var selectedStatus = FEEDBACK
-    val formatter = SimpleDateFormat("dd-MM-yyyy")
+    val formatter = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
     
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +66,7 @@ class ReviewFragment : BottomSheetDialogFragment() {
                 chip_feedback.isSelected = true
                 chip_issue.isSelected = false
                 selectedStatus = FEEDBACK
+                chip_issue.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                 chip_issue.chipBackgroundColor = null
                 chip_feedback.chipBackgroundColor = resources.getColorStateList(R.color.green_tint, null)
             }
@@ -71,19 +74,13 @@ class ReviewFragment : BottomSheetDialogFragment() {
 
         chip_issue.setOnClickListener {
             if(!chip_issue.isSelected){
+                chip_issue.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tv_status.text = "I want to report an issue."
                 chip_issue.isSelected = true
                 chip_feedback.isSelected = false
                 selectedStatus = ISSUE
                 chip_feedback.chipBackgroundColor = null
                 chip_issue.chipBackgroundColor = resources.getColorStateList(R.color.red_tint, null)
-            }
-            else{
-                tv_status.text = "I want to give some feedback."
-                chip_issue.isSelected = false
-                selectedStatus = FEEDBACK
-                chip_issue.chipBackgroundColor = null
-                chip_feedback.chipBackgroundColor = resources.getColorStateList(R.color.green_tint, null)
             }
         }
 
@@ -117,13 +114,29 @@ class ReviewFragment : BottomSheetDialogFragment() {
                     if (response.isSuccessful) {
                         try {
                             if(response.code() == 200){
-                                Toast.makeText(requireContext(), "", Toast.LENGTH_SHORT).show()
+                                when(selectedStatus){
+                                    FEEDBACK ->{
+                                        Toast.makeText(requireContext(), "Thank you for your feedback!", Toast.LENGTH_SHORT).show()
+                                    }
+                                    ISSUE ->{
+                                        Toast.makeText(requireContext(), "Your query has been submitted!", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                                dismiss()
                             }
                             else {
                                 Toast.makeText(requireContext(), response.body()?.message, Toast.LENGTH_SHORT).show()
                             }
                         } catch (e: Exception) {
                             Toast.makeText(requireContext(), "Something went wrong!", Toast.LENGTH_SHORT).show()
+                            e.printStackTrace()
+                        }
+                    }
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(requireContext(), errorResponse.message, Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
                             e.printStackTrace()
                         }
                     }

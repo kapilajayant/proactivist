@@ -12,6 +12,7 @@ data class GetCandidatesItem(
     var can_photo: String,
     var status: Int,
     var timestamp: String,
+    var token: String,
     var company_linkedin: String,
     var company_logo: String,
     var company_name: String,

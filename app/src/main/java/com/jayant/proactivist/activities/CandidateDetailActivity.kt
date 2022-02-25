@@ -33,8 +33,6 @@ import com.jayant.proactivist.models.ResponseModel
 import com.jayant.proactivist.models.get_candidates.GetCandidatesItem
 import com.jayant.proactivist.rest.APIService
 import com.jayant.proactivist.rest.ApiUtils
-import com.jayant.proactivist.utils.Constants
-import com.jayant.proactivist.utils.DialogHelper
 import com.ncorti.slidetoact.SlideToActView
 import de.hdodenhof.circleimageview.CircleImageView
 import okhttp3.MediaType
@@ -47,9 +45,8 @@ import android.widget.Toast
 import androidx.core.net.toFile
 import com.bumptech.glide.request.RequestOptions
 import com.jayant.proactivist.fragments.NoInternetFragment
+import com.jayant.proactivist.utils.*
 import com.jayant.proactivist.utils.Constants.NO_INTERNET
-import com.jayant.proactivist.utils.NetworkManager
-import com.jayant.proactivist.utils.ScrollableTextView
 import okhttp3.MultipartBody
 
 class CandidateDetailActivity : AppCompatActivity() {
@@ -58,7 +55,7 @@ class CandidateDetailActivity : AppCompatActivity() {
     lateinit var apiService: APIService
     private var allowDelete = false
     private lateinit var database: FirebaseDatabase
-    private var referrerId: String? = null
+    private lateinit var referrerId: String
     private lateinit var candidateId: String
     private lateinit var iv_linkedin: ImageView
     private lateinit var iv_profile: CircleImageView
@@ -214,6 +211,12 @@ class CandidateDetailActivity : AppCompatActivity() {
                 }
             }
             changeStatus(status, false)
+            btn_accept.onSlideCompleteListener = object : SlideToActView.OnSlideCompleteListener{
+                override fun onSlideComplete(view: SlideToActView) {
+                    btn_reject.visibility = View.VISIBLE
+                    btn_reject.resetSlider()
+                }
+            }
         }
 
         candidateId = profileId
@@ -299,6 +302,10 @@ class CandidateDetailActivity : AppCompatActivity() {
         jsonObject.put("can_gid", candidateId)
         jsonObject.put("application_id", applicationId)
         jsonObject.put("ref_gid", referrerId)
+        if(status == Constants.ACCEPTED){
+            jsonObject.put("email", FirebaseAuth.getInstance().currentUser?.email)
+            jsonObject.put("job_id", candidatesItem?.job_id)
+        }
         val body = RequestBody.create(
             MediaType.parse("application/json; charset=utf-8"),
             jsonObject.toString()
@@ -314,9 +321,11 @@ class CandidateDetailActivity : AppCompatActivity() {
                             if(response.code() == 200) {
                                 when (status) {
                                     Constants.ACCEPTED -> {
+                                        candidatesItem?.token?.let { NotificationManager.sendNotification(token = it, Constants.ACCEPTED, candidateId, referrerId) }
                                         showAcceptedUi()
                                     }
                                     Constants.REJECTED -> {
+                                        candidatesItem?.token?.let { NotificationManager.sendNotification(token = it, Constants.REJECTED, candidateId, referrerId) }
                                         showRejectedUi()
                                     }
                                     Constants.SUBMITTED -> {
@@ -335,6 +344,14 @@ class CandidateDetailActivity : AppCompatActivity() {
                                 ).show()
                             }
                             Log.d("profile_backend", "onResponse: ${response.body()?.data}")
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(this@CandidateDetailActivity, errorResponse.message, Toast.LENGTH_SHORT).show()
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
@@ -428,6 +445,14 @@ class CandidateDetailActivity : AppCompatActivity() {
                             e.printStackTrace()
                         }
                     }
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(this@CandidateDetailActivity, errorResponse.message, Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                 }
 
                 override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
@@ -459,6 +484,15 @@ class CandidateDetailActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(this@CandidateDetailActivity, errorResponse.message, Toast.LENGTH_SHORT).show()
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
@@ -562,10 +596,17 @@ class CandidateDetailActivity : AppCompatActivity() {
             window.statusBarColor = resources.getColor(R.color.green_tint)
         }
         relative_bg.background = ColorDrawable(ContextCompat.getColor(this, R.color.green_tint))
+        btn_accept.visibility = View.GONE
+        btn_reject.visibility = View.VISIBLE
+        btn_action.visibility = View.VISIBLE
+        btn_accept.onSlideCompleteListener = object : SlideToActView.OnSlideCompleteListener{
+            override fun onSlideComplete(view: SlideToActView) {
+                btn_reject.visibility = View.VISIBLE
+                btn_reject.resetSlider()
+            }
+        }
         btn_action.text = "Upload Photo"
         btn_action.backgroundTintList = ContextCompat.getColorStateList(this, R.color.black)
-        btn_accept.visibility = View.GONE
-        btn_action.visibility = View.VISIBLE
         btn_action.setOnClickListener {
             val intent = Intent(this@CandidateDetailActivity, ConfirmActivity::class.java)
             intent.putExtra("ref", referrerId)
@@ -592,6 +633,7 @@ class CandidateDetailActivity : AppCompatActivity() {
             window.statusBarColor = resources.getColor(R.color.red_tint)
         }
         btn_accept.visibility = View.VISIBLE
+        btn_accept.refreshDrawableState()
         btn_reject.visibility = View.GONE
         relative_bg.background = ColorDrawable(ContextCompat.getColor(this, R.color.red_tint))
     }

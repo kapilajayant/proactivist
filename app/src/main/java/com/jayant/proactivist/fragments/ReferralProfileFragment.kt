@@ -21,6 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.Gson
 import com.jayant.proactivist.R
 import com.jayant.proactivist.activities.ReferrerProfileActivity
 import com.jayant.proactivist.models.ResponseModel
@@ -29,6 +30,7 @@ import com.jayant.proactivist.rest.APIService
 import com.jayant.proactivist.rest.ApiUtils
 import com.jayant.proactivist.utils.Constants
 import com.jayant.proactivist.utils.NetworkManager
+import com.jayant.proactivist.utils.NotificationManager
 import de.hdodenhof.circleimageview.CircleImageView
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -38,7 +40,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.awaitResponse
 
-class ReferralProfileFragment(var referrer: GetReferrersItem?, val referCallback: ReferCallback) : BottomSheetDialogFragment() {
+class ReferralProfileFragment(var referrer: GetReferrersItem, val referCallback: ReferCallback) : BottomSheetDialogFragment() {
 
     private var et_job_id: EditText? = null
     private var tv_profile_name: TextView? = null
@@ -74,6 +76,13 @@ class ReferralProfileFragment(var referrer: GetReferrersItem?, val referCallback
 
         tv_profile_name?.text = referrer?.company_name
 //        tv_company_name?.text = referrer?.referrer_name
+
+        iv_profile.setOnClickListener {
+            val intent = Intent(requireContext(), ReferrerProfileActivity::class.java)
+            val ref = referrer
+            intent.putExtra("ref_gid", ref.ref_gid)
+            startActivity(intent)
+        }
 
         Glide.with(requireContext()).load(referrer?.company_logo).into(iv_profile)
 //        Glide.with(requireContext()).load(photo).into(iv_logo)
@@ -111,7 +120,8 @@ class ReferralProfileFragment(var referrer: GetReferrersItem?, val referCallback
         tv_info?.text = spannable
         tv_info?.setOnClickListener {
             val intent = Intent(requireContext(), ReferrerProfileActivity::class.java)
-            intent.putExtra("referrer", referrer)
+            val ref = referrer
+            intent.putExtra("ref_gid", ref.ref_gid)
             startActivity(intent)
         }
 
@@ -190,6 +200,13 @@ class ReferralProfileFragment(var referrer: GetReferrersItem?, val referCallback
                 if (response.isSuccessful) {
                     try {
                         if(response.code() == 200){
+                            referrer?.ref_gid?.let {
+                                referrer?.token?.let { it1 ->
+                                    NotificationManager.sendNotification(token = it1, Constants.PENDING, candidateId,
+                                        it
+                                    )
+                                }
+                            }
                             Toast.makeText(requireContext(), "Request sent!", Toast.LENGTH_SHORT).show()
                             dismiss()
                             referCallback.closeReferrer()
@@ -199,6 +216,14 @@ class ReferralProfileFragment(var referrer: GetReferrersItem?, val referCallback
                         }
                     } catch (e: Exception) {
                         Toast.makeText(requireContext(), "Something went wrong!", Toast.LENGTH_SHORT).show()
+                        e.printStackTrace()
+                    }
+                }
+                else{
+                    try {
+                        val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                        Toast.makeText(requireContext(), errorResponse.message, Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 }

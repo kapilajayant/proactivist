@@ -179,13 +179,20 @@ class ProfileActivity : AppCompatActivity() {
                             e.printStackTrace()
                         }
                     }
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(this@ProfileActivity, errorResponse.message, Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                 }
 
                 override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
                     Log.d("profile_backend", "onFailure: ${call.request().url()}")
                     t.printStackTrace()
                 }
-
             })
     }
 
@@ -201,39 +208,6 @@ class ProfileActivity : AppCompatActivity() {
         chip.isClickable = true
         chip.isCheckable = false
         chipGroup.addView(chip as View, chipGroup.childCount - 1, layoutParams)
-    }
-
-    private fun getProfileFromFirebase() {
-        val mAuth = FirebaseAuth.getInstance()
-        val currentUser: FirebaseUser? = mAuth.currentUser
-        var profile: Profile? = null
-
-        val database = FirebaseDatabase.getInstance()
-        if (currentUser != null) {
-            database.getReference("users").child(currentUser.uid).child("profile")
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-
-                        val value = snapshot.getValue(Profile::class.java)
-                        if (value != null) {
-                            val prefManager = PrefManager(this@ProfileActivity)
-                            prefManager.setProfile(value)
-                            profile = value
-
-                            setProfile(profile)
-
-                            swipe.isRefreshing = false
-                            Log.d("hui", "onDataChange: $profile")
-                        }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-
-                        Toast.makeText(this@ProfileActivity, "Something went wrong", Toast.LENGTH_SHORT).show()
-                        swipe.isRefreshing = false
-                    }
-                })
-        }
     }
 
     private fun setProfile(profile: Profile?) {
@@ -277,7 +251,6 @@ class ProfileActivity : AppCompatActivity() {
             )
 
             Glide.with(this@ProfileActivity).load(profile?.company_logo)
-                .apply(RequestOptions.circleCropTransform())
                 .into(iv_logo)
         }
         catch (e: Exception) {

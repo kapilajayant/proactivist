@@ -1,5 +1,6 @@
 package com.jayant.proactivist.fragments
 
+import android.content.DialogInterface
 import com.jayant.proactivist.R
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.gson.Gson
 import com.jayant.proactivist.models.ListResponseModel
 import com.jayant.proactivist.models.ResponseModel
 import com.jayant.proactivist.rest.APIService
@@ -82,6 +84,15 @@ class InviteCodeFragment(val inviteCodeCallback: InviteCodeCallback) : BottomShe
                             e.printStackTrace()
                         }
                     }
+
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(requireContext(), errorResponse.message, Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                 }
 
                 override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
@@ -90,6 +101,12 @@ class InviteCodeFragment(val inviteCodeCallback: InviteCodeCallback) : BottomShe
                 }
             })
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        val prefManager = PrefManager(requireContext())
+        prefManager.showInviteCode = false
     }
 
     interface InviteCodeCallback{

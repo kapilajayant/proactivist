@@ -83,6 +83,7 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:overScrollMode="never"
                 android:scrollbars="none"
                 android:padding="20dp">
 
@@ -257,6 +258,7 @@
                     <com.jayant.proactivist.utils.ScrollableTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autoLink="web"
                         android:maxHeight="200dp"
                         android:minHeight="100dp"
                         android:scrollbars="vertical"
@@ -354,7 +356,7 @@
                         app:area_margin="10dp"
                         app:animation_duration="400"
                         app:animate_completion="true"
-                        app:bump_vibration="50"
+                        app:bump_vibration="100"
                         app:outer_color="@color/green"
                         app:inner_color="@color/white"
                         app:border_radius="60dp"
@@ -377,7 +379,7 @@
                         app:area_margin="10dp"
                         app:animation_duration="400"
                         app:animate_completion="true"
-                        app:bump_vibration="50"
+                        app:bump_vibration="100"
                         app:outer_color="@color/red"
                         app:inner_color="@color/white"
                         app:border_radius="60dp"

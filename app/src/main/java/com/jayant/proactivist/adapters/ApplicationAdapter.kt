@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.database.*
 import com.jayant.proactivist.activities.ChatActivity
 import com.jayant.proactivist.R
@@ -57,6 +59,12 @@ class ApplicationAdapter(var context: Context, var applicationsList: ArrayList<A
         try {
             when(applicationsList[position].status){
                 REJECTED ->{
+                    holder.tvReferrer.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.tvTitle.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.tv_profile.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.tvDesc.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.view_left.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
+                    holder.view_right.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
                     holder.ivAction.visibility = View.GONE
                     holder.constraintParent.background = ColorDrawable(ContextCompat.getColor(context, R.color.red_tint))
 //                    holder.ivAction.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_reject))
@@ -71,10 +79,22 @@ class ApplicationAdapter(var context: Context, var applicationsList: ArrayList<A
 //                    holder.ivAction.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_accept))
                 }
                 SUBMITTED ->{
+                    holder.tvReferrer.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.tvTitle.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.tv_profile.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.tvDesc.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.view_left.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
+                    holder.view_right.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
                     holder.constraintParent.background = ColorDrawable(ContextCompat.getColor(context, R.color.purple_200))
 //                    holder.ivAction.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_accept))
                 }
                 COMPLETED ->{
+                    holder.tvReferrer.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.tvTitle.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.tv_profile.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.tvDesc.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    holder.view_left.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
+                    holder.view_right.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
                     holder.constraintParent.background = ColorDrawable(ContextCompat.getColor(context, R.color.blue))
 //                    holder.ivAction.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_accept))
                 }
@@ -123,7 +143,7 @@ class ApplicationAdapter(var context: Context, var applicationsList: ArrayList<A
         holder.tvTitle.text = application.name
 
         holder.tvDesc.text = application.timestamp?.substring(0, 10)
-        Glide.with(context).load(application.photo).into(holder.ivLogo)
+        Glide.with(context).load(application.photo).apply(RequestOptions.circleCropTransform()).into(holder.ivLogo)
 
         holder.ivAction.setOnClickListener {
             val intent = Intent(context, ChatActivity::class.java)
@@ -169,4 +189,6 @@ class JobsViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
     val ivAction = itemView.findViewById<ImageView>(R.id.iv_action)
     val cardProfile = itemView.findViewById<CardView>(R.id.card_profile)
     val constraintParent = itemView.findViewById<ConstraintLayout>(R.id.constraintParent)
+    val view_left = itemView.findViewById<View>(R.id.view_left)
+    val view_right = itemView.findViewById<View>(R.id.view_right)
 }

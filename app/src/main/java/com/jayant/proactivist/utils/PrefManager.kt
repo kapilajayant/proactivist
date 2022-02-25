@@ -32,6 +32,9 @@ class PrefManager(var _context: Context) {
         private const val TOKEN = "token"
         private const val INVITE_CODE = "invite_code"
         private const val LATEST_VERSION_CODE = "latest_version_code"
+        private const val SELECTED_ROLE = "selected_role"
+        private const val SHOW_INVITE_CODE = "show_invite_code"
+        private const val GUIDE_COUNT = "guide_count"
     }
 
     init {
@@ -158,10 +161,31 @@ class PrefManager(var _context: Context) {
             editor.apply()
         }
 
+    var showInviteCode: Boolean
+        get() = pref.getBoolean(SHOW_INVITE_CODE, false)
+        set(showInviteCode) {
+            editor.putBoolean(SHOW_INVITE_CODE, showInviteCode)
+            editor.apply()
+        }
+
     var latestVersionCode: Int
         get() = pref.getInt(LATEST_VERSION_CODE, BuildConfig.VERSION_CODE)
         set(latestVersionCode) {
             editor.putInt(LATEST_VERSION_CODE, latestVersionCode)
+            editor.apply()
+        }
+
+    var guideCount: Int
+        get() = pref.getInt(GUIDE_COUNT, 0)
+        set(guideCount) {
+            editor.putInt(GUIDE_COUNT, guideCount)
+            editor.apply()
+        }
+
+    var selectedRole: String?
+        get() = pref.getString(SELECTED_ROLE, "")
+        set(selectedRole) {
+            editor.putString(SELECTED_ROLE, selectedRole)
             editor.apply()
         }
 
@@ -218,4 +242,8 @@ class PrefManager(var _context: Context) {
 //                profileResume,
 //                compId
 //            )
+
+    fun clear(){
+        pref.edit().clear().apply()
+    }
 }

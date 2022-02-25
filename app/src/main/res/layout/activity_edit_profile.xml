@@ -186,6 +186,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:maxLength="10"
             android:enabled="true"
             android:fontFamily="@font/nunito_bold"
             android:paddingBottom="15dp"
@@ -201,42 +202,41 @@
             android:textColor="@color/gray"
             android:text="Current Company"/>
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginTop="10dp"
+            android:id="@+id/constraint_company"
             android:gravity="center_vertical">
 
-        <AutoCompleteTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/nunito_bold"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@id/iv_search"
-            android:paddingBottom="15dp"
-            android:id="@+id/et_company"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/gray"/>
-
             <ImageView
-                android:id="@+id/iv_search"
+                android:id="@+id/iv_logo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_business"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:backgroundTint="@color/gray"
+                android:fontFamily="@font/nunito_bold"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_company_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:backgroundTint="@color/purple_500"
-                android:background="?selectableItemBackgroundBorderless"
-                android:padding="10dp"
-                android:src="@drawable/ic_search" />
+                android:layout_marginStart="5dp"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nunito_bold"
+                android:hint="Select Company"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_logo"
+                android:layout_alignParentEnd="true"/>
 
-        </RelativeLayout>
-
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:indeterminate="true"
-            android:id="@+id/progress"
-            android:layout_margin="10dp"
-            />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -277,6 +277,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_info"
             android:id="@+id/tv_resume"
             android:fontFamily="@font/nunito_regular"
             android:layout_marginTop="10dp"

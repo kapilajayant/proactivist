@@ -11,4 +11,5 @@ data class GetReferrersItem(
     var company_logo: String,
     var company_name: String,
     var company_linkedin: String,
+    var token: String,
 ):Parcelable

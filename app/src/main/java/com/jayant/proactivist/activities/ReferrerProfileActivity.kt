@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
+import com.google.gson.Gson
 import com.jayant.proactivist.R
 import com.jayant.proactivist.fragments.NoInternetFragment
 import com.jayant.proactivist.fragments.ReferCallback
@@ -48,7 +49,7 @@ class ReferrerProfileActivity : AppCompatActivity(), ReferCallback {
     private lateinit var tv_position: TextView
     private lateinit var card_ask: MaterialButton
     private lateinit var swipe: SwipeRefreshLayout
-    private var referrer: GetReferrersItem? = null
+    private var ref_gid = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,9 +81,9 @@ class ReferrerProfileActivity : AppCompatActivity(), ReferCallback {
         swipe.setOnRefreshListener {
             swipe.isRefreshing = true
 
-            if (intent.hasExtra("referrer")){
+            if (intent.hasExtra("ref_gid")){
                 intent.extras?.let {
-                    referrer = it.getParcelable("referrer")
+                    ref_gid = it.getString("ref_gid", "")
                 }
             }
             if(NetworkManager.getConnectivityStatusString(this@ReferrerProfileActivity) != Constants.NO_INTERNET) {
@@ -95,11 +96,11 @@ class ReferrerProfileActivity : AppCompatActivity(), ReferCallback {
 
         }
 
-        if (intent.hasExtra("referrer")){
+//        if (intent.hasExtra("referrer")){
             intent.extras?.let {
-                referrer = it.getParcelable("referrer")
+                ref_gid = it.getString("ref_gid", "")
             }
-        }
+//        }
         if(NetworkManager.getConnectivityStatusString(this@ReferrerProfileActivity) != Constants.NO_INTERNET) {
             getProfile()
         }
@@ -139,18 +140,20 @@ class ReferrerProfileActivity : AppCompatActivity(), ReferCallback {
                 e.printStackTrace()
             }
         }
-        card_ask.setOnClickListener {
-            val fragment = profile.let { it1 -> profile.photo?.let { it2 ->
-                ReferralProfileFragment(
-                    referrer, this)
-            }
-            }
-            fragment?.show(supportFragmentManager, "")
-        }
+//        card_ask.setOnClickListener {
+//            val fragment = profile.let { it1 -> profile.photo?.let { it2 ->
+//                referrer?.let { it3 ->
+//                    ReferralProfileFragment(
+//                        it3, this)
+//                }
+//            }
+//            }
+//            fragment?.show(supportFragmentManager, "")
+//        }
     }
 
     private fun getProfile() {
-        referrer?.ref_gid?.let {uid ->
+        ref_gid.let {uid ->
             apiService.getProfile(uid, Constants.REFERRER_USER_TYPE)
                 .enqueue(object : Callback<ResponseModel> {
                     override fun onResponse(
@@ -177,8 +180,15 @@ class ReferrerProfileActivity : AppCompatActivity(), ReferCallback {
                                 e.printStackTrace()
                             }
                         }
+                        else{
+                            try {
+                                val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                                Toast.makeText(this@ReferrerProfileActivity, errorResponse.message, Toast.LENGTH_SHORT).show()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
                     }
-
                     override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
                         swipe.isRefreshing = false
                         Log.d("profile_backend", "onFailure: ${call.request().url()}")

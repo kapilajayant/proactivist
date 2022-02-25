@@ -11,4 +11,8 @@ public class ApiUtils {
     public static APIService getAPIService() {
         return RetrofitClient.getClient().create(APIService.class);
     }
+
+    public static APIService getNotificationAPIService() {
+        return RetrofitClient.getNotificationClient().create(APIService.class);
+    }
 }

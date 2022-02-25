@@ -13,6 +13,8 @@ import com.jayant.proactivist.R
 import com.jayant.proactivist.fragments.EditProfileFragment
 import com.jayant.proactivist.fragments.InviteCodeFragment
 import com.jayant.proactivist.utils.Constants
+import com.jayant.proactivist.utils.PrefManager
+import com.jayant.proactivist.utils.ShortcutManagerUtil
 
 class UserRoleActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallback {
 
@@ -22,7 +24,7 @@ class UserRoleActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallb
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_role)
 
-        tv_enter_code = findViewById(R.id.tv_enter_code)
+//        tv_enter_code = findViewById(R.id.tv_enter_code)
         val card_referrer = findViewById<CardView>(R.id.card_referrer)
         val card_candidate = findViewById<CardView>(R.id.card_candidate)
         val tv_sign_out = findViewById<TextView>(R.id.tv_sign_out)
@@ -32,17 +34,15 @@ class UserRoleActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallb
         card_referrer.setOnClickListener {
             intent.putExtra("role", Constants.REFERRER)
             startActivity(intent)
-            Toast.makeText(this, "Referrer", Toast.LENGTH_SHORT).show()
         }
 
         card_candidate.setOnClickListener {
             intent.putExtra("role", Constants.CANDIDATE)
             startActivity(intent)
-            Toast.makeText(this, "Candidate", Toast.LENGTH_SHORT).show()
         }
 
         tv_sign_out.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
+            val mAuth = FirebaseAuth.getInstance()
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -51,6 +51,9 @@ class UserRoleActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallb
 
             mGoogleSignInClient.signOut().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    ShortcutManagerUtil.removeShortcuts(this@UserRoleActivity)
+                    mAuth.signOut()
+                    PrefManager(this).clear()
                     val intent = Intent(this, WelcomeActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
@@ -61,10 +64,10 @@ class UserRoleActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallb
             }
         }
 
-        tv_enter_code.setOnClickListener {
-            val fragment = InviteCodeFragment(this)
-            fragment.show(supportFragmentManager, "")
-        }
+//        tv_enter_code.setOnClickListener {
+//            val fragment = InviteCodeFragment(this)
+//            fragment.show(supportFragmentManager, "")
+//        }
 
     }
 

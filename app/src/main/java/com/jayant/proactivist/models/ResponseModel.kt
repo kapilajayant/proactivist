@@ -7,6 +7,8 @@ import com.google.gson.reflect.TypeToken
 import com.jayant.proactivist.models.check_user.CheckUserResponse
 import com.jayant.proactivist.models.get_candidates.GetCandidatesItem
 import com.jayant.proactivist.models.get_referrers.GetReferrersItem
+import com.jayant.proactivist.models.learn.ArticleModel
+import com.jayant.proactivist.models.learn.TopicModel
 
 data class ResponseModel(
     var status: String,
@@ -59,6 +61,18 @@ data class ListResponseModel(
     fun getApplicationsResponse(): ArrayList<Application> {
         val gson = Gson()
         val itemType = object : TypeToken<ArrayList<Application>>() {}.type
+        return gson.fromJson(this.data.toString(), itemType)
+    }
+
+    fun getTopicsResponse(): ArrayList<TopicModel> {
+        val gson = Gson()
+        val itemType = object : TypeToken<ArrayList<TopicModel>>() {}.type
+        return gson.fromJson(this.data.toString(), itemType)
+    }
+
+    fun getArticlesResponse(): ArrayList<ArticleModel> {
+        val gson = Gson()
+        val itemType = object : TypeToken<ArrayList<ArticleModel>>() {}.type
         return gson.fromJson(this.data.toString(), itemType)
     }
 }

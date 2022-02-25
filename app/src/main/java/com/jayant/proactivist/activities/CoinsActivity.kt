@@ -12,7 +12,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 import com.jayant.proactivist.R
 import com.jayant.proactivist.fragments.InviteCodeFragment
 import com.jayant.proactivist.models.ResponseModel
@@ -26,6 +28,7 @@ import java.util.ArrayList
 
 class CoinsActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallback {
 
+    private lateinit var swipe: SwipeRefreshLayout
     private lateinit var iv_back: ImageView
     private lateinit var iv_others: ImageView
     private lateinit var iv_whatsapp: ImageView
@@ -47,12 +50,17 @@ class CoinsActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallback
             window.decorView.systemUiVisibility = View.STATUS_BAR_VISIBLE
         }
 
+        swipe = findViewById(R.id.swipe)
         iv_back = findViewById(R.id.iv_back)
         iv_whatsapp = findViewById(R.id.iv_whatsapp)
         iv_others = findViewById(R.id.iv_others)
         tv_code = findViewById(R.id.tv_code)
         tv_coins = findViewById(R.id.tv_coins)
         tv_enter_code = findViewById(R.id.tv_enter_code)
+
+        swipe.setOnRefreshListener {
+            getCoins()
+        }
 
         iv_back.setOnClickListener {
             finish()
@@ -144,6 +152,7 @@ class CoinsActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallback
                     call: Call<ResponseModel>,
                     response: Response<ResponseModel>
                 ) {
+                    swipe.isRefreshing = false
                     if (response.isSuccessful) {
                         try {
                             if(response.code() == 200){
@@ -167,9 +176,18 @@ class CoinsActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallback
                             e.printStackTrace()
                         }
                     }
+                    else{
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.charStream(), ResponseModel::class.java)
+                            Toast.makeText(this@CoinsActivity, errorResponse.message, Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                 }
 
                 override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                    swipe.isRefreshing = false
                     Toast.makeText(this@CoinsActivity, "Something went wrong!", Toast.LENGTH_SHORT).show()
                     Log.d("profile_backend", "onFailure: ${call.request().url()}")
                     t.printStackTrace()

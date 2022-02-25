@@ -12,7 +12,7 @@ import com.jayant.proactivist.utils.Constants
 import com.jayant.proactivist.utils.ForceUpdateChecker
 import com.jayant.proactivist.utils.PrefManager
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), InviteCodeFragment.InviteCodeCallback {
 
     var navView: BottomNavigationView? = null
 
@@ -30,6 +30,11 @@ class HomeActivity : AppCompatActivity() {
         openFragment(ReferFragment.newInstance("", ""))
 
         val prefManager = PrefManager(this)
+        if(prefManager.showInviteCode){
+            val fragment = InviteCodeFragment(this)
+            fragment.show(supportFragmentManager, "")
+        }
+
         val currentVersionCode = BuildConfig.VERSION_CODE
         val latestVersionCode = prefManager.latestVersionCode
 
@@ -51,9 +56,9 @@ class HomeActivity : AppCompatActivity() {
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             val selectedItemId = navView?.selectedItemId
             when (item.itemId) {
-                R.id.menu_feed -> {
-                    if (R.id.menu_feed !== selectedItemId) {
-                        openFragment(HomeFragment.newInstance("", ""))
+                R.id.menu_shop -> {
+                    if (R.id.menu_shop !== selectedItemId) {
+                        openFragment(ShopFragment())
                     }
                     return@OnNavigationItemSelectedListener true
                 }
@@ -90,6 +95,10 @@ class HomeActivity : AppCompatActivity() {
             Log.d("hui", "onBackPressed else: ")
             navView?.selectedItemId = R.id.menu_jobs
         }
+    }
+
+    override fun addedInviteCode() {
+
     }
 
 }
